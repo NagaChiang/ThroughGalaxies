@@ -14,6 +14,21 @@ public class PlayerController : MonoBehaviour {
     public float tiltLimit;
     public Boundary boundary;
 
+    private Weapon weapon;
+
+    void Start()
+    {
+        // get the weapon object in children
+        weapon = GetComponentInChildren<Weapon>();
+    }
+
+    void Update()
+    {
+        // fire the weapon
+        if (Input.GetButton("Fire1"))
+            weapon.fire();
+    }
+
 	void FixedUpdate()
     {
         // handle the movements
