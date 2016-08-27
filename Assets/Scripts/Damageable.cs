@@ -10,7 +10,6 @@ public abstract class Damageable : MonoBehaviour {
     {
         // initial health
         _health = maxHealth;
-
     }
 	
     public abstract void applyDamage(float damage);
