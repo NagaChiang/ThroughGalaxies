@@ -6,10 +6,10 @@ public class Asteroid : Damageable {
     public float rotateFactor;
     public GameObject vfxExplosion;
 
-	void Start ()
+	new void Start ()
     {
-        // initial properties
-        _health = maxHealth;
+        // from Damageable
+        base.Start();
 
         // random rotation
         Rigidbody rigidbody = GetComponent<Rigidbody>();
@@ -31,20 +31,6 @@ public class Asteroid : Damageable {
             // apply damage depending on remaining health
             other.GetComponent<Damageable>().applyDamage(_health);
 
-            // destroy this asteroid
-            destroy();
-        }
-    }
-
-    // for other gameObject to apply damage
-    public override void applyDamage(float damage)
-    {
-        // reduce health
-        _health -= damage;
-
-        // dead
-        if (_health <= 0)
-        {
             // destroy this asteroid
             destroy();
         }

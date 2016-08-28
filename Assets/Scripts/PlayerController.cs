@@ -26,10 +26,12 @@ public class PlayerController : Damageable {
 
     private Weapon _currentWeapon;
 
-    void Start()
+    new void Start()
     {
+        // from Damageable
+        base.Start();
+
         // initial properties
-        _health = maxHealth;
         _currentWeapon = weapons.Bolt;
     }
 
@@ -44,20 +46,6 @@ public class PlayerController : Damageable {
     {
         // handle the movements
         move();
-    }
-
-    // for other gameObject to apply damage
-    public override void applyDamage(float damage)
-    {
-        // reduce health
-        _health -= damage;
-
-        // dead
-        if(_health <= 0)
-        {
-            // destroy the player
-            destroy();
-        }
     }
 
     // handle the movement of the plane
