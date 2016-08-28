@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum BulletSource
+{
+    player,
+    enemy,
+}
+
 public class Bullet : MonoBehaviour {
 
+    public BulletSource bulletSource;
     public float initialSpeed;
     public float acceleration;
     public float damage;
@@ -23,20 +30,37 @@ public class Bullet : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        // contact with boundary / player / bullets
+        // ignore boundary and other bullets 
         if (other.tag == "Boundary"
-            || other.tag == "Player"
             || other.tag == "Bullet")
         {
             // do nothing
             return;
         }
 
-        // contact with anything else (Damageable)
+        // ignore player (bullets from player)
+        else if (other.tag == "Player"
+                    && bulletSource == BulletSource.player)
+        {
+            // do nothing
+            return;
+        }
+
+        // ignore enemies (bullets from enemies)
+        else if (other.tag == "Enemy"
+                    && bulletSource == BulletSource.enemy)
+        {
+            // do nothing
+            return;
+        }
+
+        // hit anything else Damageable
         else
         {
             // apply damage to it
-            other.GetComponent<Damageable>().applyDamage(damage);
+            Damageable target = other.GetComponent<Damageable>();
+            if(target != null)
+                target.applyDamage(damage);
 
             // destroy this bullet
             Destroy(gameObject);

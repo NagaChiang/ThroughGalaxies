@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// NOTE: Must instantiate a game object in the scene;
+// otherwise, it can not trace the position of the attached object.
+
 public class Weapon : MonoBehaviour {
 
     public float fireCooldown;
@@ -24,5 +27,4 @@ public class Weapon : MonoBehaviour {
             Instantiate(bullet, transform.position, transform.rotation); // world position
         }
     }
-
 }
