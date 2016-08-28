@@ -39,8 +39,7 @@ public abstract class Damageable : MonoBehaviour {
     // display blinking effects once on hit
     private IEnumerator blinkOnHit()
     {
-        Color colorBlink = new Color(1.0f, 0.5f, 0.5f, 1.0f);
-        float blinkDuration = 0.1f;
+        float blinkDuration = 0.05f;
         Shader shaderBlink = Shader.Find("FX/Flare");
 
         // change the material to blink color for a while

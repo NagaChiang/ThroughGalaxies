@@ -1,8 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
+public struct VerticalSpeed
+{
+    public float min;
+    public float max;
+}
+
 public class Asteroid : Damageable {
 
+    public VerticalSpeed verticalSpeed;
     public float rotateFactor;
     public GameObject vfxExplosion;
 
@@ -11,8 +19,11 @@ public class Asteroid : Damageable {
         // from Damageable
         base.Start();
 
-        // random rotation
+        // random speed
         Rigidbody rigidbody = GetComponent<Rigidbody>();
+        rigidbody.velocity = new Vector3(0.0f, 0.0f, Random.Range(verticalSpeed.min, verticalSpeed.max));
+
+        // random rotation
         rigidbody.angularVelocity = Random.insideUnitSphere * rotateFactor;
     }
 
