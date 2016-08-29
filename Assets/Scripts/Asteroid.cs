@@ -12,7 +12,10 @@ public class Asteroid : Damageable {
 
     public VerticalSpeed verticalSpeed;
     public float rotateFactor;
+    public int score;
     public GameObject vfxExplosion;
+
+    private GameManager _gameManager;
 
 	new void Start ()
     {
@@ -25,6 +28,11 @@ public class Asteroid : Damageable {
 
         // random rotation
         rigidbody.angularVelocity = Random.insideUnitSphere * rotateFactor;
+
+        // find the game manager
+        GameObject objGameManager = GameObject.FindGameObjectWithTag("GameManager");
+        if (objGameManager)
+            _gameManager = objGameManager.GetComponent<GameManager>();
     }
 
     void OnTriggerEnter(Collider other)
@@ -44,6 +52,9 @@ public class Asteroid : Damageable {
 
     protected override void destroy()
     {
+        // add score to game manager
+        _gameManager.addScore(score);
+
         // explosion vfx
         Instantiate(vfxExplosion, transform.position, transform.rotation);
 
