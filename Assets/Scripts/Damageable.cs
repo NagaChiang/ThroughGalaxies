@@ -3,6 +3,7 @@ using System.Collections;
 
 public abstract class Damageable : MonoBehaviour {
 
+    public GameObject vfxExplosion;
     public float maxHealth;
     protected float _health;
 
@@ -50,5 +51,12 @@ public abstract class Damageable : MonoBehaviour {
     }
 
     // things to do once the health below 0
-    protected abstract void destroy();
+    protected virtual void destroy()
+    {
+        // explosion vfx
+        Instantiate(vfxExplosion, transform.position, transform.rotation);
+        
+        // destroy this game object
+        Destroy(gameObject);
+    }
 }

@@ -2,10 +2,9 @@
 using System.Collections;
 
 [System.Serializable]
-public struct Boundary
+public struct Limit
 {
-    public float xMin, xMax;
-    public float zMin, zMax;
+    public float min, max;
 }
 
 [System.Serializable]
@@ -19,9 +18,9 @@ public struct Weapons
 public class PlayerController : Damageable {
 
     public float moveSpeed;
-    public float tiltLimit;
-    public GameObject vfxExplosion;
-    public Boundary boundary;
+    public float tiltFactor;
+    public Limit boundaryX;
+    public Limit boundaryZ;
     public Weapons weapons;
 
     private Weapon _currentWeapon;
@@ -63,21 +62,12 @@ public class PlayerController : Damageable {
         // update position
         rigidbody.position = new Vector3
         (
-            Mathf.Clamp(rigidbody.position.x, boundary.xMin, boundary.xMax),
+            Mathf.Clamp(rigidbody.position.x, boundaryX.min, boundaryX.max),
             rigidbody.position.y,
-            Mathf.Clamp(rigidbody.position.z, boundary.zMin, boundary.zMax)
+            Mathf.Clamp(rigidbody.position.z, boundaryZ.min, boundaryZ.max)
         );
 
         // update rotation
-        rigidbody.rotation = Quaternion.Euler(0.0f, 0.0f, rigidbody.velocity.x * -tiltLimit);
-    }
-
-    protected override void destroy()
-    {
-        // explosion vfx
-        Instantiate(vfxExplosion, transform.position, transform.rotation);
-
-        // destroy this asteroid
-        Destroy(gameObject);
+        rigidbody.rotation = Quaternion.Euler(0.0f, 0.0f, rigidbody.velocity.x * -tiltFactor);
     }
 }
