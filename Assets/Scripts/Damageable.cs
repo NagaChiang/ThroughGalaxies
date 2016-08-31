@@ -10,6 +10,9 @@ public abstract class Damageable : MonoBehaviour {
     // blinking effect on hit
     private Shader _shaderNormal;
 
+    // low health blinking coroutine
+    private Coroutine _coroutineLowHealthBlink;
+
     protected void Start ()
     {
         // initial health
@@ -25,9 +28,22 @@ public abstract class Damageable : MonoBehaviour {
     {
         // reduce health
         _health -= damage;
-
+        
         // blinking effect
         StartCoroutine(blinkOnHit());
+
+        // low health
+        float proportionHealth = _health / maxHealth;
+        if (proportionHealth <= 0.25f)
+        {
+            if (_coroutineLowHealthBlink == null)
+            {
+                // start blinking
+                _coroutineLowHealthBlink = StartCoroutine(blinkOnLowHealth());
+
+                // TODO: stop coroutine after healing
+            }
+        }
 
         // dead
         if (_health <= 0)
@@ -48,6 +64,28 @@ public abstract class Damageable : MonoBehaviour {
         material.shader = shaderBlink;
         yield return new WaitForSeconds(blinkDuration);
         material.shader = _shaderNormal;
+    }
+
+    // display blinking effects while health is low
+    private IEnumerator blinkOnLowHealth()
+    {
+        float blinkDuration = 0.15f;
+        float blinkInterval = 1.0f;
+        Color blinkColor = new Color(1.0f, 0.5f, 0.5f);
+        Color normalColor = Color.white;
+
+        // change the material to blink color for a while
+        Material material = GetComponent<Renderer>().material;
+        while (true)
+        {
+            // change color
+            material.color = blinkColor;
+            yield return new WaitForSeconds(blinkDuration);
+
+            // normal color
+            material.color = Color.white;
+            yield return new WaitForSeconds(blinkInterval);
+        }
     }
 
     // things to do once the health below 0
