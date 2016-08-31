@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Razer : Enemy {
 
+    public float forwardSpeed;
+    public float wanderSpeed;
     public Weapon weapon;
     public Limit durationStart;
     public Limit durationHorizontal;
@@ -17,7 +19,7 @@ public class Razer : Enemy {
 
         // move down
         _rigidbody = GetComponent<Rigidbody>();
-        _rigidbody.velocity = transform.forward * moveSpeed;
+        _rigidbody.velocity = transform.forward * forwardSpeed;
 
         // wander horizontally randomly
         StartCoroutine(wander());
@@ -35,7 +37,7 @@ public class Razer : Enemy {
         {
             // move horizontally for a while
             float sign = -Mathf.Sign(transform.position.x);
-            _rigidbody.velocity = new Vector3(moveSpeed * sign, _rigidbody.velocity.y, _rigidbody.velocity.z);
+            _rigidbody.velocity = new Vector3(wanderSpeed * sign, _rigidbody.velocity.y, _rigidbody.velocity.z);
             yield return new WaitForSeconds(Random.Range(durationHorizontal.min, durationHorizontal.max));
 
             // move straight for a while

@@ -5,7 +5,6 @@ using System;
 public class Enemy : Damageable {
 
     public int score;
-    public float moveSpeed;
     public float tiltFactor;
     public Limit boundaryX;
 
