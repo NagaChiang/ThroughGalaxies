@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Razer : Enemy {
 
+    public Weapon weapon;
     public Limit durationStart;
     public Limit durationHorizontal;
     public Limit durationStraight;
@@ -20,6 +21,9 @@ public class Razer : Enemy {
 
         // wander horizontally randomly
         StartCoroutine(wander());
+
+        // constantly shoot
+        StartCoroutine(keepFiring());
     }
 
     private IEnumerator wander()
@@ -37,6 +41,15 @@ public class Razer : Enemy {
             // move straight for a while
             _rigidbody.velocity = new Vector3(0.0f, _rigidbody.velocity.y, _rigidbody.velocity.z);
             yield return new WaitForSeconds(Random.Range(durationStraight.min, durationStraight.max));
+        }
+    }
+
+    private IEnumerator keepFiring()
+    {
+        while (true)
+        {
+            weapon.fire();
+            yield return new WaitForSeconds(weapon.fireCooldown);
         }
     }
 }

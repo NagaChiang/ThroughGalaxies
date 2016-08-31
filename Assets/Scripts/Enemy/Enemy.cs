@@ -23,7 +23,7 @@ public class Enemy : Damageable {
     }
 
     void OnTriggerEnter(Collider other)
-    {
+    {   
         // hit player
         if (other.tag == "Player")
         {
