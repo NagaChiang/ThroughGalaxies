@@ -24,7 +24,7 @@ public abstract class Damageable : MonoBehaviour {
     }
 
     // taking damage
-    public void applyDamage(float damage)
+    public virtual void applyDamage(float damage)
     {
         // reduce health
         _health -= damage;

@@ -22,6 +22,7 @@ public class PlayerController : Damageable {
     public Limit boundaryX;
     public Limit boundaryZ;
     public Weapons weapons;
+    public RadialBar healthCircle;
 
     private Weapon _currentWeapon;
 
@@ -32,6 +33,9 @@ public class PlayerController : Damageable {
 
         // initial properties
         _currentWeapon = weapons.Bolt;
+
+        // update UI of health
+        healthCircle.updateValues(_health, maxHealth);
     }
 
     void Update()
@@ -45,6 +49,16 @@ public class PlayerController : Damageable {
     {
         // handle the movements
         move();
+    }
+
+    // add functions to update the UI of health
+    public override void applyDamage(float damage)
+    {
+        // base function
+        base.applyDamage(damage);
+        
+        // update UI of health
+        healthCircle.updateValues(_health, maxHealth);
     }
 
     // handle the movement of the plane
