@@ -29,7 +29,7 @@ public class Enemy : Damageable {
             // apply damage depending on remaining health
             Damageable target = other.GetComponent<Damageable>();
             if (target != null)
-                target.applyDamage(_health);
+                target.applyDamage(maxHealth);
 
             // destroy this ship
             destroy();

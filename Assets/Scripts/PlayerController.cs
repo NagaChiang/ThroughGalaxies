@@ -22,7 +22,7 @@ public class PlayerController : Damageable {
     public Limit boundaryX;
     public Limit boundaryZ;
     public PlayerWeapons weapons;
-    public HealthRadialBar healthCircle;
+    public HealthBar healthCircle;
 
     private Weapon _currentWeapon;
 

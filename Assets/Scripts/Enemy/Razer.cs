@@ -5,7 +5,7 @@ public class Razer : Enemy {
 
     public float forwardSpeed;
     public float wanderSpeed;
-    public Weapon weapon;
+    public SimpleWeapon weapon;
     public Limit durationStart;
     public Limit durationHorizontal;
     public Limit durationStraight;

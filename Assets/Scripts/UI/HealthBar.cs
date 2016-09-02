@@ -2,11 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class HealthRadialBar : RadialBar {
+public class HealthBar : Bar {
 
-    public float delayedTime;
-    public float lerpTime;
-    public Image imageDelayedBar;
     public Text textValue;
     public Text textValueMax;
 
@@ -14,7 +11,6 @@ public class HealthRadialBar : RadialBar {
     {
         // update filled bar
         base.update(value, max);
-        StartCoroutine(updateDelayedBar(value, max));
 
         // update filled bars color
         updateBarColor(value, max);
@@ -44,24 +40,6 @@ public class HealthRadialBar : RadialBar {
         imageBar.color = newColor;
         imageDelayedBar.color = new Color(newColor.r, newColor.g, newColor.b,
                                             imageDelayedBar.color.a);
-    }
-
-    private IEnumerator updateDelayedBar(float value, float max)
-    {
-        float proportion = value / max;
-        if (proportion < 0)
-            proportion = 0.0f;
-
-        // delay
-        yield return new WaitForSeconds(delayedTime);
-
-        // lerp to new value
-        float lastProportion = imageDelayedBar.fillAmount;
-        for (float time = 0.0f; time < lerpTime; time += Time.deltaTime)
-        {
-            imageDelayedBar.fillAmount = Mathf.Lerp(lastProportion, proportion, time / lerpTime);
-            yield return null;
-        }
     }
 
     private void updateText(float value, float max)

@@ -4,19 +4,12 @@ using System.Collections;
 // NOTE: Must instantiate a game object in the scene;
 // otherwise, it can not trace the position of the attached object.
 
-public class Weapon : MonoBehaviour {
+public abstract class Weapon : MonoBehaviour {
 
     public float fireCooldown;
     public GameObject bullet;
 
     private float _nextFire;
-
-    // copy constructor
-    public Weapon(Weapon other)
-    {
-        fireCooldown = other.fireCooldown;
-        bullet = other.bullet;
-    }
 
     public void fire()
     {
@@ -24,7 +17,9 @@ public class Weapon : MonoBehaviour {
         if(Time.time > _nextFire)
         {
             _nextFire = Time.time + fireCooldown;
-            Instantiate(bullet, transform.position, transform.rotation); // world position
+            doFire();
         }
     }
+
+    protected abstract void doFire();
 }

@@ -70,7 +70,7 @@ public abstract class Damageable : MonoBehaviour {
     private IEnumerator blinkOnLowHealth()
     {
         float blinkDuration = 0.15f;
-        float blinkInterval = 1.0f;
+        float blinkInterval = 0.5f;
         Color blinkColor = new Color(1.0f, 0.5f, 0.5f);
         Color normalColor = Color.white;
 
