@@ -14,7 +14,11 @@ public class GameManager : MonoBehaviour {
 	void Start ()
     {
         // initial properties
+        _score = 0;
         _difficultyFactor = 1.0f;
+
+        // update score UI
+        updateScoreUI(_score);
 
         // spawn waves
         StartCoroutine(spawnWaves());
@@ -25,8 +29,8 @@ public class GameManager : MonoBehaviour {
         // add to total score (with difficulty bonus)
         _score += (int)(num * _difficultyFactor);
 
-        // update GUI
-        updateScoreGUI(_score);
+        // update score UI
+        updateScoreUI(_score);
     }
 
     public void gameover()
@@ -47,7 +51,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private void updateScoreGUI(int newScore)
+    private void updateScoreUI(int newScore)
     {
         // compensate prefix 0s
         string strScore = newScore.ToString();

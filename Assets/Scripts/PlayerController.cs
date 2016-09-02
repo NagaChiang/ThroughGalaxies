@@ -8,7 +8,7 @@ public struct Limit
 }
 
 [System.Serializable]
-public struct Weapons
+public struct PlayerWeapons
 {
     public Weapon Bolt;
     public Weapon Sphere;
@@ -21,8 +21,8 @@ public class PlayerController : Damageable {
     public float tiltFactor;
     public Limit boundaryX;
     public Limit boundaryZ;
-    public Weapons weapons;
-    public RadialBar healthCircle;
+    public PlayerWeapons weapons;
+    public HealthRadialBar healthCircle;
 
     private Weapon _currentWeapon;
 
@@ -35,7 +35,7 @@ public class PlayerController : Damageable {
         _currentWeapon = weapons.Bolt;
 
         // update UI of health
-        healthCircle.updateValues(_health, maxHealth);
+        healthCircle.update(_health, maxHealth);
     }
 
     void Update()
@@ -58,7 +58,7 @@ public class PlayerController : Damageable {
         base.applyDamage(damage);
         
         // update UI of health
-        healthCircle.updateValues(_health, maxHealth);
+        healthCircle.update(_health, maxHealth);
     }
 
     // handle the movement of the plane

@@ -13,6 +13,7 @@ public class Asteroid : Damageable {
     public VerticalSpeed verticalSpeed;
     public float rotateFactor;
     public int score;
+    public int damage;
 
     private GameManager _gameManager;
 
@@ -42,7 +43,7 @@ public class Asteroid : Damageable {
             // apply damage depending on remaining health
             Damageable target = other.GetComponent<Damageable>();
             if (target != null)
-                target.applyDamage(_health);
+                target.applyDamage(damage);
 
             // destroy this asteroid
             destroy();

@@ -83,7 +83,7 @@ public abstract class Damageable : MonoBehaviour {
             yield return new WaitForSeconds(blinkDuration);
 
             // normal color
-            material.color = Color.white;
+            material.color = normalColor;
             yield return new WaitForSeconds(blinkInterval);
         }
     }
