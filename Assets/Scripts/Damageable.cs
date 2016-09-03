@@ -26,30 +26,67 @@ public abstract class Damageable : MonoBehaviour {
     // taking damage
     public virtual void applyDamage(float damage)
     {
+        // check the damage is positive
+        if(damage < 0)
+        {
+            Debug.LogWarning("Invalid damage amount: negative value.");
+            return;
+        }
+
         // reduce health
         _health -= damage;
-        
+
+        // dead
+        if (_health <= 0)
+        {
+            _health = 0;
+
+            // destroy this gameObject
+            destroy();
+            return;
+        }
+
         // blinking effect
         StartCoroutine(blinkOnHit());
 
         // low health
         float proportionHealth = _health / maxHealth;
-        if (proportionHealth <= 0.25f)
+        if (proportionHealth < 0.25f)
         {
             if (_coroutineLowHealthBlink == null)
             {
                 // start blinking
                 _coroutineLowHealthBlink = StartCoroutine(blinkOnLowHealth());
-
-                // TODO: stop coroutine after healing
             }
         }
+    }
 
-        // dead
-        if (_health <= 0)
+    // healing
+    public virtual void applyHealing(float healing)
+    {
+        // check the healing is positive
+        if (healing < 0)
         {
-            // destroy this gameObject
-            destroy();
+            Debug.LogWarning("Invalid healing amount: negative value.");
+            return;
+        }
+
+        // gain health
+        _health += healing;
+
+        // health cap
+        if (_health > maxHealth)
+            _health = maxHealth;
+
+        // remove low health blinking
+        float proportionHealth = _health / maxHealth;
+        if (proportionHealth >= 0.25f)
+        {
+            if (_coroutineLowHealthBlink != null) // TODO: untested
+            {
+                // stop blinking
+                StopCoroutine(_coroutineLowHealthBlink);
+            }
         }
     }
 
