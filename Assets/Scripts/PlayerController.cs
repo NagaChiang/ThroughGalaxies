@@ -33,9 +33,6 @@ public class PlayerController : Damageable {
 
         // initial properties
         _currentWeapon = weapons.Bolt;
-
-        // update UI of health
-        healthCircle.update(_health, maxHealth);
     }
 
     void Update()

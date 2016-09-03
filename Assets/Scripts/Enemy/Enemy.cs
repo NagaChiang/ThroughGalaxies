@@ -50,7 +50,7 @@ public class Enemy : Damageable {
         // update rotation (tilt)
         Quaternion quat = rigidbody.rotation;
         rigidbody.rotation = Quaternion.Euler(quat.eulerAngles.x, quat.eulerAngles.y,
-                                                rigidbody.velocity.x * -tiltFactor);
+                                                rigidbody.velocity.x * tiltFactor);
 
     }
 
