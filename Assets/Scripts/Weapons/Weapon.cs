@@ -6,8 +6,10 @@ using System.Collections;
 
 public abstract class Weapon : MonoBehaviour {
 
-    public float fireCooldown;
     public GameObject bullet;
+    public float fireCooldown;
+    public int shotPerFire;
+    public float shotInterval;
 
     private float _nextFire;
 
@@ -17,9 +19,9 @@ public abstract class Weapon : MonoBehaviour {
         if(Time.time > _nextFire)
         {
             _nextFire = Time.time + fireCooldown;
-            doFire();
+            StartCoroutine(doFire());
         }
     }
 
-    protected abstract void doFire();
+    protected abstract IEnumerator doFire();
 }

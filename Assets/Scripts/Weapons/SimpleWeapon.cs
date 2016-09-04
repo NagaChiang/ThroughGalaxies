@@ -3,8 +3,9 @@ using System.Collections;
 
 public class SimpleWeapon : Weapon {
 
-    protected override void doFire()
+    protected override IEnumerator doFire()
     {
         Instantiate(bullet, transform.position, transform.rotation);
+        yield break;
     }
 }
