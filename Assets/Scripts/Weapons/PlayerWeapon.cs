@@ -5,6 +5,7 @@ public abstract class PlayerWeapon : Weapon {
 
     public Vector3 sideFireOffset;
     public int[] expForLevel = new int[_MAX_LEVEL - 1];
+    public Color color;
 
     public int experience { get; private set; }
     public int level { get; private set; }
@@ -23,17 +24,25 @@ public abstract class PlayerWeapon : Weapon {
 
     public void addExperience(int exp)
     {
+        // ignore any exp after maxed out
+        if (isMaxLevel())
+            return;
+
         // add
         experience += exp;
 
         // check upgrade
         if (level < _MAX_LEVEL)
         {
-            int expForNextLevel = getExpForLevel(level + 1);
+            int expForNextLevel = getExpForNextLevel();
             if (experience >= expForNextLevel)
             {
                 experience -= expForNextLevel;
                 level += 1;
+
+                // reach max level
+                if (isMaxLevel())
+                    experience = getExpForLevel(_MAX_LEVEL);
             }
          }
     }
@@ -47,6 +56,11 @@ public abstract class PlayerWeapon : Weapon {
             Debug.LogWarning("Invalid requested level: " + lv.ToString());
 
         return exp;
+    }
+
+    public int getExpForNextLevel()
+    {
+        return getExpForLevel(level + 1);
     }
 
     public bool isMaxLevel()
