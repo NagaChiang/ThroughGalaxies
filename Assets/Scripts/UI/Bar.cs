@@ -71,6 +71,7 @@ public abstract class Bar : MonoBehaviour {
             image.fillAmount = Mathf.Lerp(valueLast, valueNew, time / lerpTime);
             yield return null;
         }
+        image.fillAmount = valueNew;
 
         // end the lerping
         isLerping = false;

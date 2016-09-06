@@ -5,6 +5,8 @@ public abstract class Damageable : MonoBehaviour {
 
     public GameObject vfxExplosion;
     public float maxHealth;
+    public int experience;
+
     protected float _health;
 
     // blinking effect on hit
@@ -125,11 +127,22 @@ public abstract class Damageable : MonoBehaviour {
         }
     }
 
-    // things to do once the health below 0
+    // things to do once the health drop below 0
     protected virtual void destroy()
     {
         // explosion vfx
         Instantiate(vfxExplosion, transform.position, transform.rotation);
+
+        // drop experience crystals
+        GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        if (!gameManager)
+            Debug.LogError("Can't find the GameManager.");
+        else if (experience > 0 && gameManager)
+        {
+            Vector3 pos = transform.position;
+            float radius = GetComponent<Collider>().bounds.extents.x;
+            gameManager.dropExperience(pos, radius, experience);
+        }
         
         // destroy this game object
         Destroy(gameObject);
