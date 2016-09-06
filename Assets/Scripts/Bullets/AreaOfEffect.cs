@@ -1,0 +1,74 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class AreaOfEffect : MonoBehaviour {
+
+    public BulletSource bulletSource;
+    public float duration;
+    public float radius;
+    public float damageInterval;
+    public int damage;
+
+    void Start()
+    {
+        // apply area damage
+        StartCoroutine(damageArea(transform.position, radius, damage, damageInterval, bulletSource));
+
+        // destroy it after a while
+        Destroy(gameObject, duration);
+    }
+
+    private IEnumerator damageArea(Vector3 center, float rad, int dmg, float interval, BulletSource source)
+    {
+        while (true)
+        {
+            // get all the colliders in range
+            Collider[] hitColliders = Physics.OverlapSphere(center, rad);
+            foreach (Collider collider in hitColliders)
+            {
+                // check null
+                if (collider == null)
+                    continue;
+
+                // ignore boundary and other bullets 
+                if (collider.tag == "Boundary"
+                    || collider.tag == "Bullet")
+                {
+                    // do nothing
+                    continue;
+                }
+
+                // ignore player (bullets from player)
+                else if (collider.tag == "Player"
+                            && bulletSource == BulletSource.player)
+                {
+                    // do nothing
+                    continue;
+                }
+
+                // ignore enemies (bullets from enemies)
+                else if (collider.tag == "Enemy"
+                            && bulletSource == BulletSource.enemy)
+                {
+                    // do nothing
+                    continue;
+                }
+
+                // hit anything else Damageable
+                else
+                {
+                    // apply damage to it
+                    Damageable target = collider.GetComponent<Damageable>();
+                    if (target != null)
+                        target.applyDamage(dmg);
+                }
+            }
+
+            // damage interval
+            if (interval <= 0)
+                break;
+            else
+                yield return new WaitForSeconds(interval);
+        }
+    }
+}

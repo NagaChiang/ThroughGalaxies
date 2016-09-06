@@ -10,22 +10,34 @@ public enum BulletSource
 public class Bullet : MonoBehaviour {
 
     public BulletSource bulletSource;
+    public GameObject[] explosions;
     public float initialSpeed;
+    public float accelerationDelay;
     public float acceleration;
+    public float accAcceleration;
     public float damage;
+
+    private float _startTime;
 
     void Start ()
     {
         // initial speed
         Rigidbody rigidbody = GetComponent<Rigidbody>();
         rigidbody.velocity = transform.forward * initialSpeed;
+
+        // record the start time for acceleration delay
+        _startTime = Time.time;
     }
 
     void FixedUpdate()
     {
-        // acceleration
-        Rigidbody rigidbody = GetComponent<Rigidbody>();
-        rigidbody.velocity += transform.forward * acceleration;
+        if (Time.time - _startTime >= accelerationDelay)
+        {
+            // acceleration
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
+            acceleration += accAcceleration;
+            rigidbody.velocity += transform.forward * acceleration;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -62,8 +74,18 @@ public class Bullet : MonoBehaviour {
             if(target != null)
                 target.applyDamage(damage);
 
-            // destroy this bullet
-            Destroy(gameObject);
+            // do things on destroy
+            destroy();
         }
+    }
+
+    protected virtual void destroy()
+    {
+        // explosion
+        foreach(GameObject obj in explosions)
+            Instantiate(obj, transform.position, transform.rotation);
+
+        // destroy game object
+        Destroy(gameObject);
     }
 }

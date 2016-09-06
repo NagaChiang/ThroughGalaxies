@@ -5,7 +5,10 @@ public class SimpleWeapon : Weapon {
 
     protected override IEnumerator doFire()
     {
-        Instantiate(bullet, transform.position, transform.rotation);
-        yield break;
+        for (int i = 0; i < shotPerFire; i++)
+        {
+            Instantiate(bullet, transform.position, transform.rotation);
+            yield return new WaitForSeconds(shotInterval);
+        }
     }
 }

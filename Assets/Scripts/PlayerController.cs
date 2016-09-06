@@ -102,7 +102,7 @@ public class PlayerController : Damageable {
             loadWeapon(weapons.Bolt);
 
         else if (Input.GetButtonDown("Weapon2"))
-            loadWeapon(weapons.Bolt);
+            loadWeapon(weapons.Sphere);
 
         else if (Input.GetButtonDown("Weapon3"))
             loadWeapon(weapons.Bolt);
