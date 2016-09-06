@@ -44,7 +44,8 @@ public class Bullet : MonoBehaviour {
     {
         // ignore boundary and other bullets 
         if (other.tag == "Boundary"
-            || other.tag == "Bullet")
+            || other.tag == "Bullet"
+            || other.tag == "Powerup")
         {
             // do nothing
             return;

@@ -32,7 +32,8 @@ public class AreaOfEffect : MonoBehaviour {
 
                 // ignore boundary and other bullets 
                 if (collider.tag == "Boundary"
-                    || collider.tag == "Bullet")
+                    || collider.tag == "Bullet"
+                    || collider.tag == "Powerup")
                 {
                     // do nothing
                     continue;

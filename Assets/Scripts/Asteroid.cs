@@ -1,16 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[System.Serializable]
-public struct VerticalSpeed
-{
-    public float min;
-    public float max;
-}
-
 public class Asteroid : Damageable {
 
-    public VerticalSpeed verticalSpeed;
+    public Limit verticalSpeed;
     public float rotateFactor;
     public int score;
     public int damage;
