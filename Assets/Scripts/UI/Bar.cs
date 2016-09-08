@@ -9,7 +9,7 @@ public abstract class Bar : MonoBehaviour {
     public Image imageDelayedBar;
     public Image imageBar;
 
-    private bool isLerping;
+    protected bool isLerping;
 
     protected void Start()
     {

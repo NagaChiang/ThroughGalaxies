@@ -65,10 +65,13 @@ public class PlayerController : Damageable {
     public void addWeaponExp(int exp)
     {
         // add exp to current weapon
-        _currentWeapon.addExperience(exp);
+        bool isUpgraded = _currentWeapon.addExperience(exp);
 
         // update UI
-        weaponCircle.update(_currentWeapon);
+        if (isUpgraded)
+            weaponCircle.switchWeapon(_currentWeapon);
+        else
+            weaponCircle.update(_currentWeapon);
     }
 
     // handle the movement of the plane
@@ -113,6 +116,6 @@ public class PlayerController : Damageable {
         _currentWeapon = weapon;
 
         // update UI
-        weaponCircle.update(weapon);
+        weaponCircle.switchWeapon(weapon);
     }
 }

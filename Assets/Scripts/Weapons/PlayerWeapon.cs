@@ -4,7 +4,6 @@ using System.Collections;
 public abstract class PlayerWeapon : Weapon {
 
     public Vector3 sideFireOffset;
-    public int[] expForLevel = new int[_MAX_LEVEL - 1];
     public Color color;
 
     public int experience { get; private set; }
@@ -15,6 +14,8 @@ public abstract class PlayerWeapon : Weapon {
     protected Vector3 _posRightFire;
     protected Vector3 _posLeftFire;
 
+    protected int[] _EXP_FOR_LEVEL = { 100, 300, 500, 700}; // length = _MAX_LEVEL - 1
+
     void Start()
     {
         // initial properties
@@ -22,11 +23,12 @@ public abstract class PlayerWeapon : Weapon {
         level = 1;
     }
 
-    public void addExperience(int exp)
+    // return true to indicate updgrading
+    public bool addExperience(int exp)
     {
         // ignore any exp after maxed out
         if (isMaxLevel())
-            return;
+            return false;
 
         // add
         experience += exp;
@@ -37,14 +39,20 @@ public abstract class PlayerWeapon : Weapon {
             int expForNextLevel = getExpForNextLevel();
             if (experience >= expForNextLevel)
             {
+                // upgrade
                 experience -= expForNextLevel;
                 level += 1;
 
                 // reach max level
                 if (isMaxLevel())
                     experience = getExpForLevel(_MAX_LEVEL);
+
+                // return true to indicate updgrading
+                return true;
             }
          }
+
+        return false;
     }
 
     public int getExpForLevel(int lv)
