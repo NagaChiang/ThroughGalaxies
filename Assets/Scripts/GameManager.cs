@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using System;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
@@ -12,6 +11,7 @@ public class GameManager : MonoBehaviour {
     public Text guiTextScore;
     public int numScoreDigit;
     public ExpCrystal[] expCrystals;
+    public HealCrystal[] healCrystals;
     public GameObject UiMenu;
     public GameObject UiHud;
     public GameObject UiGameover;
@@ -72,6 +72,18 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(spawnWaves());
     }
 
+    public void gameover()
+    {
+        // stop all coroutines
+        StopAllCoroutines();
+
+        // TODO: check highscores
+
+        // set the gameover menu active
+        UiGameover.SetActive(true);
+        _enabledEnterRestart = true;
+    }
+
     public void addScore(int num)
     {
         // add to total score (with difficulty bonus)
@@ -110,16 +122,21 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void gameover()
+    public void dropHealing(Vector3 center, float radius)
     {
-        // stop all coroutines
-        StopAllCoroutines();
+        // non-uniform random healing drop
+        List<int> listWeight = new List<int>();
+        foreach (HealCrystal heal in healCrystals)
+            listWeight.Add(heal.lootWeight);
+        int index = getIndexOfNonUniformRandom(listWeight);
 
-        // TODO: check highscores
+        // random position within a circle
+        Vector2 posInUnitCircle = UnityEngine.Random.insideUnitCircle;
+        Vector3 position = center + new Vector3(posInUnitCircle.x, 0.0f, posInUnitCircle.y);
 
-        // set the gameover menu active
-        UiGameover.SetActive(true);
-        _enabledEnterRestart = true;
+        // instantiate game object
+        HealCrystal crystal = healCrystals[index];
+        Instantiate(crystal, position, crystal.transform.rotation);
     }
 
     private IEnumerator spawnWaves()
@@ -163,5 +180,27 @@ public class GameManager : MonoBehaviour {
                 Destroy(obj);
             }
         }
+    }
+
+    private int getIndexOfNonUniformRandom(List<int> weights)
+    {
+        // total
+        int total = 0;
+        foreach (int w in weights)
+            total += w;
+
+        // roll a random number and map to the distribution
+        int random = Random.Range(1, total + 1);
+        int upper = 0;
+        for(int i = 0; i < weights.Count; i++)
+        {
+            upper += weights[i];
+            if (random <= upper)
+                return i;
+        }
+
+        // Error
+        Debug.LogError("There is something wrong with the weights.");
+        return -1;
     }
 }

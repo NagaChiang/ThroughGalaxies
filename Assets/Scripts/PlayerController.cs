@@ -71,6 +71,17 @@ public class PlayerController : Damageable {
         healthCircle.update(_health, maxHealth);
     }
 
+    public void applyHealing(int healing)
+    {
+        // healing
+        _health += healing;
+        if (_health > maxHealth)
+            _health = maxHealth;
+
+        // update UI
+        healthCircle.update(_health, maxHealth);
+    }
+
     public void addWeaponExp(int exp)
     {
         // add exp to current weapon

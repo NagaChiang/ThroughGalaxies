@@ -6,6 +6,7 @@ public abstract class Damageable : MonoBehaviour {
     public GameObject vfxExplosion;
     public float maxHealth;
     public int experience;
+    public float healDropRate;
 
     protected float _health;
 
@@ -135,15 +136,18 @@ public abstract class Damageable : MonoBehaviour {
 
         // drop experience crystals
         GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        Vector3 pos = transform.position;
+        float radius = GetComponent<Collider>().bounds.extents.x;
+
         if (gameManager == null)
             Debug.LogError("Can't find the GameManager.");
         else if (experience > 0 && gameManager)
-        {
-            Vector3 pos = transform.position;
-            float radius = GetComponent<Collider>().bounds.extents.x;
             gameManager.dropExperience(pos, radius, experience);
-        }
-        
+
+        // drop healings
+        if (Random.value <= healDropRate && gameManager)
+            gameManager.dropHealing(pos, radius);
+
         // destroy this game object
         Destroy(gameObject);
     }
