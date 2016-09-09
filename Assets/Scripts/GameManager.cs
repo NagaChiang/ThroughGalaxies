@@ -2,25 +2,71 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
+    public GameObject player;
     public Wave[] waves;
     public Text guiTextScore;
     public int numScoreDigit;
     public ExpCrystal[] expCrystals;
+    public GameObject UiMenu;
+    public GameObject UiHud;
+    public GameObject UiGameover;
 
     private int _score;
     private float _difficultyFactor;
+    private bool _enabledEnterRestart;
 
 	void Start ()
     {
+        // show main menu
+        showMainMenu();
+    }
+
+    void Update()
+    {
+        // let player press enter to start
+        if (_enabledEnterRestart && Input.GetButtonDown("Submit"))
+            restart();
+    }
+
+    public void showMainMenu()
+    {
+        // disable other UI and enable main menu
+        UiMenu.SetActive(true);
+        UiHud.SetActive(false);
+        UiGameover.SetActive(false);
+        _enabledEnterRestart = true;
+    }
+
+    public void restart()
+    {
+        // disable enter
+        _enabledEnterRestart = false;
+
+        // clear previous remains
+        clearRemainingGameObjects();
+
+        // disable other UI and enable HUD
+        UiMenu.SetActive(false);
+        UiHud.SetActive(true);
+        UiGameover.SetActive(false);
+
+        // stop all previous coroutines
+        StopAllCoroutines();
+
         // initial properties
         _score = 0;
         _difficultyFactor = 1.0f;
 
         // update score UI
         updateScoreUI(_score);
+
+        // spawn player
+        Instantiate(player, player.transform.position, player.transform.rotation);
 
         // spawn waves
         StartCoroutine(spawnWaves());
@@ -66,7 +112,14 @@ public class GameManager : MonoBehaviour {
 
     public void gameover()
     {
+        // stop all coroutines
+        StopAllCoroutines();
 
+        // TODO: check highscores
+
+        // set the gameover menu active
+        UiGameover.SetActive(true);
+        _enabledEnterRestart = true;
     }
 
     private IEnumerator spawnWaves()
@@ -91,5 +144,24 @@ public class GameManager : MonoBehaviour {
 
         // update to GUI
         guiTextScore.text = strScore;
+    }
+
+    private void clearRemainingGameObjects()
+    {
+        // get all the objects to be cleared
+        List<GameObject[]> listObjects = new List<GameObject[]>();
+        listObjects.Add(GameObject.FindGameObjectsWithTag("Enemy"));
+        listObjects.Add(GameObject.FindGameObjectsWithTag("Bullet"));
+        listObjects.Add(GameObject.FindGameObjectsWithTag("Powerup"));
+        listObjects.Add(GameObject.FindGameObjectsWithTag("Asteroid"));
+
+        // clear these objects
+        foreach(GameObject[] objs in listObjects)
+        {
+            foreach(GameObject obj in objs)
+            {
+                Destroy(obj);
+            }
+        }
     }
 }

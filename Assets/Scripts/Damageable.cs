@@ -135,7 +135,7 @@ public abstract class Damageable : MonoBehaviour {
 
         // drop experience crystals
         GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        if (!gameManager)
+        if (gameManager == null)
             Debug.LogError("Can't find the GameManager.");
         else if (experience > 0 && gameManager)
         {

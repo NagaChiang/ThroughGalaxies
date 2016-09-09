@@ -16,7 +16,7 @@ public abstract class PlayerWeapon : Weapon {
 
     protected int[] _EXP_FOR_LEVEL = { 100, 300, 500, 700}; // length = _MAX_LEVEL - 1
 
-    void Start()
+    void Awake()
     {
         // initial properties
         experience = 0;
@@ -59,7 +59,7 @@ public abstract class PlayerWeapon : Weapon {
     {
         int exp = 0;
         if (lv >= 2 && lv <= _MAX_LEVEL)
-            exp = expForLevel[lv - 2];
+            exp = _EXP_FOR_LEVEL[lv - 2];
         else
             Debug.LogWarning("Invalid requested level: " + lv.ToString());
 

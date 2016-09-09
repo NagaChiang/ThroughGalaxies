@@ -29,11 +29,20 @@ public class PlayerController : Damageable {
 
     new void Start()
     {
+        // get HUDs
+        healthCircle = GameObject.Find("HealthCircle").GetComponent<HealthBar>();
+        weaponCircle = GameObject.Find("WeaponCircle").GetComponent<WeaponBar>();
+        if (healthCircle == null)
+            Debug.LogError("Can not find the health bar.");
+        if (weaponCircle == null)
+            Debug.LogError("Can not find the weapon bar.");
+
         // from Damageable
         base.Start();
 
         // initial properties
         loadWeapon(weapons.Bolt);
+        healthCircle.update(maxHealth, maxHealth);
     }
 
     void Update()
@@ -117,5 +126,17 @@ public class PlayerController : Damageable {
 
         // update UI
         weaponCircle.switchWeapon(weapon);
+    }
+
+    protected override void destroy()
+    {
+        // inform the gameManager that the game is over
+        GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        if (gameManager == null)
+            Debug.LogError("Can't find the GameManager.");
+        gameManager.gameover();
+
+        // from Damageable
+        base.destroy();
     }
 }
