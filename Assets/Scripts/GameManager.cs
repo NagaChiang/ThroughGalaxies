@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
@@ -13,6 +12,7 @@ public class GameManager : MonoBehaviour {
     public ExpCrystal[] expCrystals;
     public HealCrystal[] healCrystals;
     public GameObject UiMenu;
+    public GameObject UiHowToPlay;
     public GameObject UiHud;
     public GameObject UiGameover;
 
@@ -37,9 +37,16 @@ public class GameManager : MonoBehaviour {
     {
         // disable other UI and enable main menu
         UiMenu.SetActive(true);
+        UiHowToPlay.SetActive(false);
         UiHud.SetActive(false);
         UiGameover.SetActive(false);
         _enabledEnterRestart = true;
+    }
+    public void showHowToPlay()
+    {
+        // enable how to play
+        UiMenu.SetActive(false);
+        UiHowToPlay.SetActive(true);
     }
 
     public void restart()
