@@ -7,8 +7,8 @@ public abstract class Powerup : MonoBehaviour {
     public float rotateFactor;
 
     // player collecting prefernces
-    private const float COLLECT_FORCE = 25.0f;
-    private const float COLLECT_RANGE = 5.0f;
+    private const float COLLECT_FORCE = 20.0f;
+    private const float COLLECT_RANGE = 4.0f;
 
     private bool isLooted;
 
@@ -74,7 +74,7 @@ public abstract class Powerup : MonoBehaviour {
         else
         {
             // zero out the velocity
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().velocity = new Vector3(0.0f, 0.0f, -verticalSpeed);
         }
     }
 
