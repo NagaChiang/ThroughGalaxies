@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Razer_Targeting : Enemy {
+public class TargetingEnemy : Enemy {
 
     public float initialSpeed;
     public float verticalSpeed;

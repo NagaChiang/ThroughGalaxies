@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Razer : Enemy {
+public class WanderEnemy : Enemy {
 
     public float forwardSpeed;
     public float wanderSpeed;
