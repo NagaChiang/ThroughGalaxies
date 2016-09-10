@@ -210,9 +210,10 @@ public class GameManager : MonoBehaviour {
         listObjects.Add(GameObject.FindGameObjectsWithTag("Bullet"));
         listObjects.Add(GameObject.FindGameObjectsWithTag("Powerup"));
         listObjects.Add(GameObject.FindGameObjectsWithTag("Asteroid"));
+        listObjects.Add(GameObject.FindGameObjectsWithTag("Wave"));
 
         // clear these objects
-        foreach(GameObject[] objs in listObjects)
+        foreach (GameObject[] objs in listObjects)
         {
             foreach(GameObject obj in objs)
             {
