@@ -3,21 +3,33 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+[System.Serializable]
+public struct Stage
+{
+    public Wave[] waves;
+}
+
 public class GameManager : MonoBehaviour {
 
     public GameObject player;
-    public Wave[] waves;
     public Text guiTextScore;
     public int numScoreDigit;
+    public float stageInterval;
+
+    public Stage[] galaxies;
     public ExpCrystal[] expCrystals;
     public HealCrystal[] healCrystals;
+
+    public BackgroundScroller BgScroller;
     public GameObject UiMenu;
     public GameObject UiHowToPlay;
     public GameObject UiHud;
     public GameObject UiGameover;
+    public Text UiTextDisplay;
 
     private int _score;
     private float _difficultyFactor;
+    private int _stage;
     private bool _enabledEnterRestart;
 
 	void Start ()
@@ -68,6 +80,7 @@ public class GameManager : MonoBehaviour {
         // initial properties
         _score = 0;
         _difficultyFactor = 1.0f;
+        _stage = 1;
 
         // update score UI
         updateScoreUI(_score);
@@ -148,16 +161,33 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator spawnWaves()
     {
-        // spawn waves one by one
-        foreach(Wave wave in waves)
+        // for each galaxy
+        foreach (Stage galaxy in galaxies)
         {
-            if (wave != null)
+            // stage display start
+            UiTextDisplay.text = "Galaxy " + _stage.ToString();
+            UiTextDisplay.gameObject.SetActive(true);
+            BgScroller.isBoostEnabled = true;
+
+            // stage display end
+            yield return new WaitForSeconds(stageInterval);
+            UiTextDisplay.gameObject.SetActive(false);
+            BgScroller.isBoostEnabled = false;
+
+            // spawn waves one by one
+            foreach (Wave wave in galaxy.waves)
             {
-                GameObject objWave = Instantiate(wave.gameObject);
-                objWave.GetComponent<Wave>().spawn(_difficultyFactor);
-                yield return new WaitForSeconds(wave.duration);
-                Destroy(objWave);
+                if (wave != null)
+                {
+                    GameObject objWave = Instantiate(wave.gameObject);
+                    objWave.GetComponent<Wave>().spawn(_difficultyFactor);
+                    yield return new WaitForSeconds(wave.duration);
+                    Destroy(objWave);
+                }
             }
+
+            // next atage
+            _stage++;
         }
     }
 
