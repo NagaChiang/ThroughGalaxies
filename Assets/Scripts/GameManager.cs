@@ -153,8 +153,10 @@ public class GameManager : MonoBehaviour {
         {
             if (wave != null)
             {
-                StartCoroutine(wave.spawn(_difficultyFactor));
+                GameObject objWave = Instantiate(wave.gameObject);
+                objWave.GetComponent<Wave>().spawn(_difficultyFactor);
                 yield return new WaitForSeconds(wave.duration);
+                Destroy(objWave);
             }
         }
     }

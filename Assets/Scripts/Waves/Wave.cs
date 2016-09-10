@@ -6,5 +6,5 @@ public abstract class Wave : MonoBehaviour {
 
     public float duration;
 
-    public abstract IEnumerator spawn(float difficulty);
+    public abstract void spawn(float difficulty);
 }

@@ -41,7 +41,7 @@ public class TargetingEnemy : Enemy {
             Debug.LogError("Can't find the object of player.");
         else
         {
-            while (true)
+            while (objPlayer)
             {
                 transform.LookAt(objPlayer.transform.position);
                 yield return null;
