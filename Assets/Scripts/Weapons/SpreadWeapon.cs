@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpreadWeapon : MonoBehaviour {
+public class SpreadWeapon : Weapon {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    protected override IEnumerator doFire()
+    {
+        for (int i = 0; i < shotPerFire; i++)
+        {
+            Instantiate(bullet, transform.position, transform.rotation);
+            yield return new WaitForSeconds(shotInterval);
+        }
+    }
 }

@@ -7,6 +7,7 @@ public class Enemy : Damageable {
     public int score;
     public float tiltFactor;
     public Limit boundaryX;
+    public Weapon weapon;
 
     private GameManager _gameManager;
 

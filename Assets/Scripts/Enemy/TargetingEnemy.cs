@@ -5,7 +5,6 @@ public class TargetingEnemy : Enemy {
 
     public float initialSpeed;
     public float verticalSpeed;
-    public SimpleWeapon weapon;
     public float firingDelay;
     public Limit durationStart;
 
@@ -38,7 +37,7 @@ public class TargetingEnemy : Enemy {
         // keep targeting player
         GameObject objPlayer = GameObject.FindWithTag("Player");
         if (objPlayer == null)
-            Debug.LogError("Can't find the object of player.");
+            Debug.Log("Can't find the object of player.");
         else
         {
             while (objPlayer)

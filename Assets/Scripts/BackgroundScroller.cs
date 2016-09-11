@@ -12,14 +12,12 @@ public class BackgroundScroller : MonoBehaviour {
 
     private float _speed;
     private float _tBoost;
-    private Vector3 _positionStart;
 
 	void Start ()
     {
         isBoostEnabled = false;
         _speed = scrollSpeed;
         _tBoost = 0.0f;
-        _positionStart = transform.position;
     }
 	
 	void FixedUpdate ()

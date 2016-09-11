@@ -5,7 +5,6 @@ public class WanderEnemy : Enemy {
 
     public float forwardSpeed;
     public float wanderSpeed;
-    public SimpleWeapon weapon;
     public Limit durationStart;
     public Limit durationHorizontal;
     public Limit durationStraight;

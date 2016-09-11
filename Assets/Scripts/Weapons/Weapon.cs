@@ -8,8 +8,10 @@ public abstract class Weapon : MonoBehaviour {
 
     public GameObject bullet;
     public float fireCooldown;
-    public int shotPerFire;
     public float shotInterval;
+    public int shotPerFire;
+    public int bulletPerShot;
+    public float shotAngleRange;
 
     private float _nextFire;
 

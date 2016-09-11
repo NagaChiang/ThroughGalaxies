@@ -22,7 +22,7 @@ public abstract class Damageable : MonoBehaviour {
         _health = maxHealth;
 
         // save the normal color
-        Material material = GetComponent<Renderer>().material;
+        Material material = GetComponentInChildren<Renderer>().material;
         _shaderNormal = material.shader;
     }
 
@@ -100,7 +100,7 @@ public abstract class Damageable : MonoBehaviour {
         Shader shaderBlink = Shader.Find("FX/Flare");
 
         // change the material to blink color for a while
-        Material material = GetComponent<Renderer>().material;
+        Material material = GetComponentInChildren<Renderer>().material;
         material.shader = shaderBlink;
         yield return new WaitForSeconds(blinkDuration);
         material.shader = _shaderNormal;
@@ -115,7 +115,7 @@ public abstract class Damageable : MonoBehaviour {
         Color normalColor = Color.white;
 
         // change the material to blink color for a while
-        Material material = GetComponent<Renderer>().material;
+        Material material = GetComponentInChildren<Renderer>().material;
         while (true)
         {
             // change color
