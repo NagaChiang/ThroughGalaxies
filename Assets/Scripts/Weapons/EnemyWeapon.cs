@@ -17,7 +17,15 @@ public class EnemyWeapon : Weapon {
             else
             {
                 // spread bullet in one shot
-                float angleBetweenBullet = shotAngleRange / (bulletPerShot - 1);
+                if (shotAngleRange > 360.0f)
+                    shotAngleRange = 360.0f;
+
+                float angleBetweenBullet = 0.0f;
+                if (shotAngleRange == 360.0f) // whole circle, start and end are the same
+                    angleBetweenBullet = shotAngleRange / bulletPerShot;
+                else
+                    angleBetweenBullet = shotAngleRange / (bulletPerShot - 1);
+
                 Quaternion lookRotation = transform.rotation;
                 lookRotation.SetLookRotation(transform.forward, Vector3.up); // get rid off tilting
                 Quaternion quatStart = lookRotation * Quaternion.Euler(0.0f, -shotAngleRange / 2, 0.0f);

@@ -43,7 +43,7 @@ public class TargetingEnemy : Enemy {
         {
             while (objPlayer)
             {
-                transform.LookAt(objPlayer.transform.position);
+                transform.LookAt(objPlayer.transform.position, transform.up);
                 yield return null;
             }
         }

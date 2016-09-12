@@ -5,10 +5,10 @@ public class WanderEnemy : Enemy {
 
     public float forwardSpeed;
     public float wanderSpeed;
+    public float minZ; // to stay
     public Limit durationStart;
     public Limit durationHorizontal;
     public Limit durationStraight;
-    public float minZ; // to stay
 
     private Rigidbody _rigidbody;
 

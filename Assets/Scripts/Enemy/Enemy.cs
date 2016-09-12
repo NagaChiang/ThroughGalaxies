@@ -6,8 +6,10 @@ public class Enemy : Damageable {
 
     public int score;
     public float tiltFactor;
+    public float rotateSpeed; // prior than tilt
     public Limit boundaryX;
     public Weapon[] weapons;
+    public Weapon weaponOnDestroy; // fire on destroy
 
     private GameManager _gameManager;
 
@@ -48,10 +50,21 @@ public class Enemy : Damageable {
             rigidbody.position.z    
         );
 
-        // update rotation (tilt)
-        Quaternion quat = rigidbody.rotation;
-        rigidbody.rotation = Quaternion.Euler(quat.eulerAngles.x, quat.eulerAngles.y,
-                                                rigidbody.velocity.x * tiltFactor);
+        // update rotation
+        if (rotateSpeed != 0)
+        {
+            // rotate
+            Quaternion quat = rigidbody.rotation;
+            float rotZ = Mathf.Repeat(quat.eulerAngles.z + rotateSpeed * Time.deltaTime, 360.0f);
+            rigidbody.rotation = Quaternion.Euler(quat.eulerAngles.x, quat.eulerAngles.y, rotZ);
+        }
+        else
+        {
+            // tilt
+            Quaternion quat = rigidbody.rotation;
+            rigidbody.rotation = Quaternion.Euler(quat.eulerAngles.x, quat.eulerAngles.y,
+                                                    rigidbody.velocity.x * tiltFactor);
+        }
 
     }
 
@@ -62,6 +75,10 @@ public class Enemy : Damageable {
 
         // add score to game manager
         _gameManager.addScore(score);
+
+        // fire weapon on destroy
+        if (weaponOnDestroy)
+            weaponOnDestroy.fire();
 
         // explosion, destroy gameobject
         base.destroy();
