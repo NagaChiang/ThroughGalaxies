@@ -32,8 +32,9 @@ public class TargetingEnemy : Enemy {
         _rigidbody.velocity = Vector3.back * verticalSpeed;
 
         // keep firing
-        StartCoroutine(keepFiring());
-        
+        foreach (Weapon weapon in weapons)
+            StartCoroutine(keepFiring(weapon));
+
         // keep targeting player
         GameObject objPlayer = GameObject.FindWithTag("Player");
         if (objPlayer == null)
@@ -48,7 +49,7 @@ public class TargetingEnemy : Enemy {
         }
     }
 
-    private IEnumerator keepFiring()
+    private IEnumerator keepFiring(Weapon weapon)
     {
         // little delay for look at
         yield return new WaitForSeconds(firingDelay);

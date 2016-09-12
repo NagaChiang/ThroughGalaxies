@@ -7,7 +7,7 @@ public class Enemy : Damageable {
     public int score;
     public float tiltFactor;
     public Limit boundaryX;
-    public Weapon weapon;
+    public Weapon[] weapons;
 
     private GameManager _gameManager;
 
@@ -45,7 +45,7 @@ public class Enemy : Damageable {
         (
             Mathf.Clamp(rigidbody.position.x, boundaryX.min, boundaryX.max),
             rigidbody.position.y,
-            rigidbody.position.z
+            rigidbody.position.z    
         );
 
         // update rotation (tilt)

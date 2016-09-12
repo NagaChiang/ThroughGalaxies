@@ -8,6 +8,7 @@ public class WanderEnemy : Enemy {
     public Limit durationStart;
     public Limit durationHorizontal;
     public Limit durationStraight;
+    public float minZ; // to stay
 
     private Rigidbody _rigidbody;
 
@@ -24,7 +25,8 @@ public class WanderEnemy : Enemy {
         StartCoroutine(wander());
 
         // constantly shoot
-        StartCoroutine(keepFiring());
+        foreach(Weapon weapon in weapons)
+            StartCoroutine(keepFiring(weapon));
     }
 
     private IEnumerator wander()
@@ -40,12 +42,15 @@ public class WanderEnemy : Enemy {
             yield return new WaitForSeconds(Random.Range(durationHorizontal.min, durationHorizontal.max));
 
             // move straight for a while
-            _rigidbody.velocity = new Vector3(0.0f, _rigidbody.velocity.y, _rigidbody.velocity.z);
+            if(minZ > 0 && transform.position.z <= minZ)
+                _rigidbody.velocity = new Vector3(0.0f, _rigidbody.velocity.y, 0.0f); // not move forward 
+            else
+                _rigidbody.velocity = new Vector3(0.0f, _rigidbody.velocity.y, _rigidbody.velocity.z);
             yield return new WaitForSeconds(Random.Range(durationStraight.min, durationStraight.max));
         }
     }
 
-    private IEnumerator keepFiring()
+    private IEnumerator keepFiring(Weapon weapon)
     {
         while (true)
         {
