@@ -17,15 +17,21 @@ public struct PlayerWeapons
 
 public class PlayerController : Damageable {
 
+    public int initialLife;
     public float moveSpeed;
     public float tiltFactor;
+    public PlayerWeapons weapons;
+
+    [Header("Boundary")]
     public Limit boundaryX;
     public Limit boundaryZ;
-    public PlayerWeapons weapons;
+
+    [Header("UI")]
     public HealthBar healthCircle;
     public WeaponBar weaponCircle;
 
     private PlayerWeapon _currentWeapon;
+    private int _remainingLife;
 
     new void Start()
     {
@@ -41,6 +47,7 @@ public class PlayerController : Damageable {
         base.Start();
 
         // initial properties
+        _remainingLife = initialLife;
         loadWeapon(weapons.Bolt);
         healthCircle.update(maxHealth, maxHealth);
     }
@@ -92,6 +99,18 @@ public class PlayerController : Damageable {
             weaponCircle.switchWeapon(_currentWeapon);
         else
             weaponCircle.update(_currentWeapon);
+    }
+
+    // add max health
+    public void addArmor(int armor)
+    {
+        maxHealth += armor;
+        applyHealing(armor);
+    }
+
+    public void addLife(int life)
+    {
+        _remainingLife += life;
     }
 
     // handle the movement of the plane

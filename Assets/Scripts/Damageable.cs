@@ -7,6 +7,7 @@ public abstract class Damageable : MonoBehaviour {
     public float maxHealth;
     public int experience;
     public float healDropRate;
+    public bool enabledDropSupply;
 
     protected float _health;
 
@@ -147,6 +148,10 @@ public abstract class Damageable : MonoBehaviour {
         // drop healings
         if (Random.value <= healDropRate && gameManager)
             gameManager.dropHealing(pos, radius);
+
+        // drop supply
+        if(enabledDropSupply)
+            gameManager.dropRandomSupply(pos, radius);
 
         // destroy this game object
         Destroy(gameObject);

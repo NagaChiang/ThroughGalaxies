@@ -12,14 +12,19 @@ public struct Stage
 public class GameManager : MonoBehaviour {
 
     public GameObject player;
-    public Text guiTextScore;
-    public int numScoreDigit;
-    public float stageInterval;
 
+    [Header("Stage")]
+    public float stageInterval;
     public Stage[] galaxies;
+
+    [Header("GameObjects")]
     public ExpCrystal[] expCrystals;
     public HealCrystal[] healCrystals;
+    public GameObject[] objSupplies;
 
+    [Header("UI")]
+    public Text guiTextScore;
+    public int numScoreDigit;
     public BackgroundScroller BgScroller;
     public GameObject UiMenu;
     public GameObject UiHowToPlay;
@@ -130,11 +135,11 @@ public class GameManager : MonoBehaviour {
             }
 
             // random suitable crystal
-            ExpCrystal crystal = expCrystals[UnityEngine.Random.Range(0, indexMax + 1)];
+            ExpCrystal crystal = expCrystals[Random.Range(0, indexMax + 1)];
             exp -= crystal.experience;
 
             // random position within a circle
-            Vector2 posInUnitCircle = UnityEngine.Random.insideUnitCircle;
+            Vector2 posInUnitCircle = Random.insideUnitCircle;
             Vector3 position = center + new Vector3(posInUnitCircle.x, 0.0f, posInUnitCircle.y);
 
             // instantiate game object
@@ -151,12 +156,25 @@ public class GameManager : MonoBehaviour {
         int index = getIndexOfNonUniformRandom(listWeight);
 
         // random position within a circle
-        Vector2 posInUnitCircle = UnityEngine.Random.insideUnitCircle;
+        Vector2 posInUnitCircle = Random.insideUnitCircle;
         Vector3 position = center + new Vector3(posInUnitCircle.x, 0.0f, posInUnitCircle.y);
 
         // instantiate game object
         HealCrystal crystal = healCrystals[index];
         Instantiate(crystal, position, crystal.transform.rotation);
+    }
+
+    public void dropRandomSupply(Vector3 center, float radius)
+    {
+        // choose between armor, healing and experience
+        GameObject obj = objSupplies[Random.Range(0, objSupplies.Length)];
+
+        // random position within a circle
+        Vector2 posInUnitCircle = Random.insideUnitCircle;
+        Vector3 position = center + new Vector3(posInUnitCircle.x, 0.0f, posInUnitCircle.y);
+
+        // instantiate game object
+        Instantiate(obj, position, obj.transform.rotation);
     }
 
     private IEnumerator spawnWaves()
