@@ -10,5 +10,12 @@ public class HealCrystal : Powerup
     {
         // heal the player
         player.applyHealing(healing);
+
+        // show popup text
+        PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
+        if (popupManager)
+            popupManager.showMessage("+" + healing + " HP", transform.position);
+        else
+            Debug.LogError("Can't find the PopupTextManager.");
     }
 }

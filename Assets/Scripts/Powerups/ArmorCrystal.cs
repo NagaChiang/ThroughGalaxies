@@ -9,5 +9,12 @@ public class ArmorCrystal : Powerup {
     {
         // heal the player
         player.addArmor(armor);
+
+        // show popup text
+        PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
+        if (popupManager)
+            popupManager.showMessage("+" + armor + " MAX HP", transform.position);
+        else
+            Debug.LogError("Can't find the PopupTextManager.");
     }
 }

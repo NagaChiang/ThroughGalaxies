@@ -10,5 +10,12 @@ public class ExpCrystal : Powerup {
     {
         // add experience to player
         player.addWeaponExp(experience);
+
+        // show popup text
+        PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
+        if (popupManager)
+            popupManager.showMessage("+" + experience + " EXP", transform.position);
+        else
+            Debug.LogError("Can't find the PopupTextManager.");
     }
 }
