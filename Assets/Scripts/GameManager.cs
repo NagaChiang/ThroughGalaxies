@@ -17,6 +17,12 @@ public class GameManager : MonoBehaviour {
     public float stageInterval;
     public Stage[] galaxies;
 
+    [Header("Shuttle")]
+    public GameObject objShuttle;
+    public float probShuttleSpawnPerWave;
+    public float posZShuttle;
+    public Limit posXShuttle;
+
     [Header("GameObjects")]
     public ExpCrystal[] expCrystals;
     public HealCrystal[] healCrystals;
@@ -197,9 +203,24 @@ public class GameManager : MonoBehaviour {
             {
                 if (wave != null)
                 {
+                    // spawn wave
                     GameObject objWave = Instantiate(wave.gameObject);
                     objWave.GetComponent<Wave>().spawn(_difficultyFactor);
-                    yield return new WaitForSeconds(wave.duration);
+
+                    // spawn shuttle or not
+                    float roll = Random.value;
+                    float shuttleDelay = 0.0f;
+                    if(roll <= probShuttleSpawnPerWave)
+                    {
+                        // spawn at random time in wave
+                        shuttleDelay = Random.Range(0.0f, wave.duration);
+                        yield return new WaitForSeconds(shuttleDelay);
+                        Vector3 pos = new Vector3(Random.Range(posXShuttle.min, posXShuttle.max + 1), 0.0f, posZShuttle);
+                        Instantiate(objShuttle, pos, objShuttle.transform.rotation);
+                    }
+
+                    // wait and destroy
+                    yield return new WaitForSeconds(wave.duration - shuttleDelay);
                     Destroy(objWave);
                 }
             }
