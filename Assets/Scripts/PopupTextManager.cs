@@ -18,8 +18,8 @@ public class PopupTextManager : MonoBehaviour {
 
         // instantiate
         PopupText pop = Instantiate(popupText);
+        pop.setText(text);
         pop.transform.SetParent(_canvas.transform, false);
         pop.transform.position = posScreen;
-        pop.setText(text);
     }
 }

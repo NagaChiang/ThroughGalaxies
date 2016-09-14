@@ -6,6 +6,7 @@ public class HealthBar : Bar {
 
     public Text textValue;
     public Text textValueMax;
+    public Text textLife;
 
     public new void update(float value, float max)
     {
@@ -17,6 +18,11 @@ public class HealthBar : Bar {
 
         // update text
         updateText(value, max);
+    }
+
+    public void updateLife(int life)
+    {
+        textLife.text = life.ToString();
     }
 
     private void updateBarColor(float value, float max)

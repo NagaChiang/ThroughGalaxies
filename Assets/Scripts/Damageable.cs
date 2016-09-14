@@ -3,6 +3,7 @@ using System.Collections;
 
 public abstract class Damageable : MonoBehaviour {
 
+    [Header("Damageable")]
     public GameObject vfxExplosion;
     public float maxHealth;
     public int experience;
@@ -15,7 +16,7 @@ public abstract class Damageable : MonoBehaviour {
     private Shader _shaderNormal;
 
     // low health blinking coroutine
-    private Coroutine _coroutineLowHealthBlink;
+    protected Coroutine _coroutineLowHealthBlink;
 
     protected void Start ()
     {
@@ -135,23 +136,26 @@ public abstract class Damageable : MonoBehaviour {
         // explosion vfx
         Instantiate(vfxExplosion, transform.position, transform.rotation);
 
-        // drop experience crystals
+        // get game manager
         GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        Vector3 pos = transform.position;
-        float radius = GetComponent<Collider>().bounds.extents.x;
-
         if (gameManager == null)
             Debug.LogError("Can't find the GameManager.");
-        else if (experience > 0 && gameManager)
-            gameManager.dropExperience(pos, radius, experience);
+        else
+        {
+            // drop experience crystals
+            Vector3 pos = transform.position;
+            float radius = GetComponent<Collider>().bounds.extents.x;
+            if (experience > 0)
+                gameManager.dropExperience(pos, radius, experience);
 
-        // drop healings
-        if (Random.value <= healDropRate && gameManager)
-            gameManager.dropHealing(pos, radius);
+            // drop healings
+            if (Random.value <= healDropRate)
+                gameManager.dropHealing(pos, radius);
 
-        // drop supply
-        if(enabledDropSupply)
-            gameManager.dropRandomSupply(pos, radius);
+            // drop supply
+            if (enabledDropSupply)
+                gameManager.dropRandomSupply(pos, radius);
+        }
 
         // destroy this game object
         Destroy(gameObject);

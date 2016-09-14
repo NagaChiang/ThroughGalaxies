@@ -11,6 +11,7 @@ public struct Stage
 
 public class GameManager : MonoBehaviour {
 
+    [Header("Player")]
     public GameObject player;
 
     [Header("Stage")]
@@ -42,8 +43,9 @@ public class GameManager : MonoBehaviour {
     private float _difficultyFactor;
     private int _stage;
     private bool _enabledEnterRestart;
+    private int _remainingLife;
 
-	void Start ()
+    void Start ()
     {
         // show main menu
         showMainMenu();
@@ -97,7 +99,7 @@ public class GameManager : MonoBehaviour {
         updateScoreUI(_score);
 
         // spawn player
-        Instantiate(player, player.transform.position, player.transform.rotation);
+        Instantiate(player);
 
         // spawn waves
         StartCoroutine(spawnWaves());

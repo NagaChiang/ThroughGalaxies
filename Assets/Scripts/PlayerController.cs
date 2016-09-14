@@ -17,21 +17,27 @@ public struct PlayerWeapons
 
 public class PlayerController : Damageable {
 
+    [Header("Player Properties")]
     public int initialLife;
     public float moveSpeed;
     public float tiltFactor;
     public PlayerWeapons weapons;
+    public GameObject objEngine;
+
+    [Header("Respawn")]
+    public float respawnDelay;
+    public float immuneDuration;
+    public float immuneBlinkInterval;
 
     [Header("Boundary")]
     public Limit boundaryX;
     public Limit boundaryZ;
 
-    [Header("UI")]
-    public HealthBar healthCircle;
-    public WeaponBar weaponCircle;
-
+    private HealthBar healthCircle;
+    private WeaponBar weaponCircle;
     private PlayerWeapon _currentWeapon;
     private int _remainingLife;
+    private bool _isImmune;
 
     new void Start()
     {
@@ -48,8 +54,13 @@ public class PlayerController : Damageable {
 
         // initial properties
         _remainingLife = initialLife;
+        _isImmune = false;
         loadWeapon(weapons.Bolt);
         healthCircle.update(maxHealth, maxHealth);
+        healthCircle.updateLife(_remainingLife);
+
+        // immunity on respawn
+        StartCoroutine(immuneOnRespawn(immuneDuration, immuneBlinkInterval));
     }
 
     void Update()
@@ -71,11 +82,14 @@ public class PlayerController : Damageable {
     // add functions to update the UI of health
     public override void applyDamage(float damage)
     {
-        // base function
-        base.applyDamage(damage);
-        
-        // update UI of health
-        healthCircle.update(_health, maxHealth);
+        if (!_isImmune)
+        {
+            // base function
+            base.applyDamage(damage);
+
+            // update UI of health
+            healthCircle.update(_health, maxHealth);
+        }
     }
 
     public void applyHealing(int healing)
@@ -84,6 +98,11 @@ public class PlayerController : Damageable {
         _health += healing;
         if (_health > maxHealth)
             _health = maxHealth;
+
+        // stop blinking
+        float proportionHealth = _health / maxHealth;
+        if (proportionHealth >= 0.25f)
+            StopCoroutine(_coroutineLowHealthBlink);
 
         // update UI
         healthCircle.update(_health, maxHealth);
@@ -111,6 +130,7 @@ public class PlayerController : Damageable {
     public void addLife(int life)
     {
         _remainingLife += life;
+        healthCircle.updateLife(_remainingLife);
     }
 
     // handle the movement of the plane
@@ -158,15 +178,86 @@ public class PlayerController : Damageable {
         weaponCircle.switchWeapon(weapon);
     }
 
+    private IEnumerator respawn()
+    {
+        // life
+        _remainingLife -= 1;
+        healthCircle.updateLife(_remainingLife);
+
+        // respawn delay
+        yield return new WaitForSeconds(respawnDelay);
+
+        // set initial properties, and turn on renderer and collider
+        applyHealing(maxHealth);
+        healthCircle.update(_health, maxHealth); // why update again?
+        gameObject.transform.position = Vector3.zero;
+        setVisible(true);
+        GetComponent<Collider>().enabled = true;
+
+        // immunity on respawn
+        StartCoroutine(immuneOnRespawn(immuneDuration, immuneBlinkInterval));
+    }
+
+    private void die()
+    {
+        // explosion vfx
+        Instantiate(vfxExplosion, transform.position, transform.rotation);
+
+        // turn off renderer and collider
+        setVisible(false);
+        GetComponent<Collider>().enabled = false;
+        transform.position = new Vector3(0.0f, 10.0f, 0.0f); // place outside
+
+        // drop TODO
+    }
+
+    private IEnumerator immuneOnRespawn(float duration, float interval)
+    {
+        // set flag to ignore damage
+        _isImmune = true;
+
+        // blink
+        for(float timeElapsed = 0.0f; timeElapsed < duration; timeElapsed += interval * 2)
+        {
+            setVisible(false);
+            yield return new WaitForSeconds(interval);
+            setVisible(true);
+            yield return new WaitForSeconds(interval);
+        }
+
+        // set flag back to receive damage again
+        _isImmune = false;
+    }
+
+    private void setVisible(bool isOn)
+    {
+        // renderer
+        gameObject.GetComponent<Renderer>().enabled = isOn;
+
+        // particle systems (engine)
+        objEngine.SetActive(isOn);
+    }
+
     protected override void destroy()
     {
-        // inform the gameManager that the game is over
+        // die
+        die();
+
+        // get game manager
         GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         if (gameManager == null)
             Debug.LogError("Can't find the GameManager.");
-        gameManager.gameover();
 
-        // from Damageable
-        base.destroy();
+        // check remaining life
+        if (_remainingLife > 0)
+            StartCoroutine(respawn());
+        else
+        {
+            // inform the gameManager that the game is over
+            gameManager.gameover();
+
+            // truly destroy
+            Destroy(gameObject);
+        }
     }
 }
