@@ -87,11 +87,8 @@ public abstract class Damageable : MonoBehaviour {
         float proportionHealth = _health / maxHealth;
         if (proportionHealth >= 0.25f)
         {
-            if (_coroutineLowHealthBlink != null) // TODO: untested
-            {
-                // stop blinking
-                StopCoroutine(_coroutineLowHealthBlink);
-            }
+            // stop blinking
+            stopBlinkOnLowHealth();
         }
     }
 
@@ -132,7 +129,8 @@ public abstract class Damageable : MonoBehaviour {
 
     protected void stopBlinkOnLowHealth()
     {
-        StopCoroutine(_coroutineLowHealthBlink);
+        if(_coroutineLowHealthBlink != null)
+            StopCoroutine(_coroutineLowHealthBlink);
         GetComponentInChildren<Renderer>().material.color = Color.white;
     }
 

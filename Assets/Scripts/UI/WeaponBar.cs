@@ -30,11 +30,16 @@ public class WeaponBar : Bar {
         isLerping = false;
 
         // set values
-        float proportion = (float)weapon.experience / weapon.getExpForNextLevel();
+        float proportion = 0.0f;
         if (weapon.isMaxLevel())
             proportion = 1.0f;
-        if (proportion < 0)
-            proportion = 0.0f;
+        else
+        {
+            proportion = (float)weapon.experience / weapon.getExpForNextLevel();
+            if (proportion < 0)
+                proportion = 0.0f;
+        }
+
         imageBar.fillAmount = proportion;
         imageDelayedBar.fillAmount = proportion;
 

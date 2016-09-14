@@ -7,7 +7,7 @@ public abstract class Powerup : MonoBehaviour {
     public float rotateFactor;
 
     // player collecting prefernces
-    private const float COLLECT_FORCE = 20.0f;
+    private const float COLLECT_FORCE_FACTOR = 40.0f;
     private const float COLLECT_RANGE = 4.0f;
 
     private bool isLooted;
@@ -30,7 +30,7 @@ public abstract class Powerup : MonoBehaviour {
         if (!isLooted)
         {
             // move towards player within a certain range
-            collected(COLLECT_FORCE, COLLECT_RANGE);
+            collected(COLLECT_FORCE_FACTOR, COLLECT_RANGE);
         }
     }
 
@@ -64,7 +64,7 @@ public abstract class Powerup : MonoBehaviour {
         {
             // calculate the force applied to the powerup
             Vector3 forceToPlayer = (posPlayer - transform.position).normalized; // direction
-            forceToPlayer *= force;
+            forceToPlayer *= force / distance;
 
             // apply force to this powerup
             GetComponent<Rigidbody>().AddForce(forceToPlayer);
