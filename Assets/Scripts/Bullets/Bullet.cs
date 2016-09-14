@@ -16,8 +16,11 @@ public class Bullet : MonoBehaviour {
     public float acceleration;
     public float accAcceleration;
     public float damage;
+    public LineRenderer lineBulletPath;
 
     private float _startTime;
+    private const float _RAY_LENGTH = 50.0f;
+    private LineRenderer _bulletPath;
 
     void Start ()
     {
@@ -27,16 +30,34 @@ public class Bullet : MonoBehaviour {
 
         // record the start time for acceleration delay
         _startTime = Time.time;
+
+        // draw bullet path
+        if (lineBulletPath)
+        {
+            // attach instance to bullet itself
+            _bulletPath = Instantiate(lineBulletPath);
+            _bulletPath.transform.SetParent(gameObject.transform);
+        }
     }
 
     void FixedUpdate()
     {
+        // acceleration
         if (Time.time - _startTime >= accelerationDelay)
         {
             // acceleration
             Rigidbody rigidbody = GetComponent<Rigidbody>();
             acceleration += accAcceleration;
             rigidbody.velocity += transform.forward * acceleration;
+        }
+
+        // update bullet path
+        if(_bulletPath)
+        {
+            // set points
+            Ray ray = new Ray(transform.position, transform.forward);
+            _bulletPath.SetPosition(0, transform.position);
+            _bulletPath.SetPosition(1, ray.GetPoint(_RAY_LENGTH));
         }
     }
 
