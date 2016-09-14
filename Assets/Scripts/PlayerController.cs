@@ -102,7 +102,7 @@ public class PlayerController : Damageable {
         // stop blinking
         float proportionHealth = _health / maxHealth;
         if (proportionHealth >= 0.25f)
-            StopCoroutine(_coroutineLowHealthBlink);
+            stopBlinkOnLowHealth();
 
         // update UI
         healthCircle.update(_health, maxHealth);

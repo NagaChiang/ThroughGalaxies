@@ -16,7 +16,7 @@ public abstract class Damageable : MonoBehaviour {
     private Shader _shaderNormal;
 
     // low health blinking coroutine
-    protected Coroutine _coroutineLowHealthBlink;
+    private Coroutine _coroutineLowHealthBlink;
 
     protected void Start ()
     {
@@ -128,6 +128,12 @@ public abstract class Damageable : MonoBehaviour {
             material.color = normalColor;
             yield return new WaitForSeconds(blinkInterval);
         }
+    }
+
+    protected void stopBlinkOnLowHealth()
+    {
+        StopCoroutine(_coroutineLowHealthBlink);
+        GetComponentInChildren<Renderer>().material.color = Color.white;
     }
 
     // things to do once the health drop below 0

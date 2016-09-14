@@ -12,7 +12,9 @@ public class EnemyWeapon : Weapon {
             if (bulletPerShot <= 1 || shotAngleRange == 0)
             {
                 // straight shot
-                Instantiate(bullet, transform.position, transform.rotation);
+                Vector3 pos = new Vector3(transform.position.x, 0.0f, transform.position.z);
+                Quaternion rot = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f);
+                Instantiate(bullet, pos, rot);
             }
             else
             {
@@ -31,8 +33,9 @@ public class EnemyWeapon : Weapon {
                 Quaternion quatStart = lookRotation * Quaternion.Euler(0.0f, -shotAngleRange / 2, 0.0f);
                 for (int j = 0; j < bulletPerShot; j++)
                 {
+                    Vector3 pos = new Vector3(transform.position.x, 0.0f, transform.position.z);
                     Quaternion rot = quatStart * Quaternion.Euler(0.0f, j * angleBetweenBullet, 0.0f);
-                    Instantiate(bullet, transform.position, rot);
+                    Instantiate(bullet, pos, rot);
                 }
             }
 

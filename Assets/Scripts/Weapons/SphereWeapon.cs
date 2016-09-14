@@ -11,34 +11,36 @@ public class SphereWeapon : PlayerWeapon {
     protected override IEnumerator doFire()
     {
         // fire depending on current level
+        Quaternion rot = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f);
         switch (level)
         {
             case 1:
-                Instantiate(bullet, transform.position, transform.rotation);
+                Instantiate(bullet, transform.position, rot);
+                // NOTE: didn't set back the CD
                 break;
 
             case 2:
                 // cooldown reduction
                 fireCooldown = cooldownReducted;
-                Instantiate(bullet, transform.position, transform.rotation);
+                Instantiate(bullet, transform.position, rot);
                 break;
 
             case 3:
                 // CDR + area damage
                 fireCooldown = cooldownReducted;
-                Instantiate(sphereArea, transform.position, transform.rotation);
+                Instantiate(sphereArea, transform.position, rot);
                 break;
 
             case 4:
                 // CDR + area damage + attack up
                 fireCooldown = cooldownReducted;
-                Instantiate(sphereAreaEnhanced, transform.position, transform.rotation);
+                Instantiate(sphereAreaEnhanced, transform.position, rot);
                 break;
 
             case 5:
                 // CDR + area damage + attack up + remain
                 fireCooldown = cooldownReducted;
-                Instantiate(sphereAreaUltimate, transform.position, transform.rotation);
+                Instantiate(sphereAreaUltimate, transform.position, rot);
                 break;
 
             default:
