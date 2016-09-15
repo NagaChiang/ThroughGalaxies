@@ -5,12 +5,12 @@ public abstract class Damageable : MonoBehaviour {
 
     [Header("Damageable")]
     public GameObject vfxExplosion;
-    public float maxHealth;
+    public int maxHealth;
     public int experience;
     public float healDropRate;
     public bool enabledDropSupply;
 
-    protected float _health;
+    protected int _health;
 
     // blinking effect on hit
     private Shader _shaderNormal;
@@ -29,7 +29,7 @@ public abstract class Damageable : MonoBehaviour {
     }
 
     // taking damage
-    public virtual void applyDamage(float damage)
+    public virtual void applyDamage(int damage)
     {
         // check the damage is positive
         if(damage < 0)
@@ -55,7 +55,7 @@ public abstract class Damageable : MonoBehaviour {
         StartCoroutine(blinkOnHit());
 
         // low health
-        float proportionHealth = _health / maxHealth;
+        float proportionHealth = (float)_health / maxHealth;
         if (proportionHealth < 0.25f)
         {
             if (_coroutineLowHealthBlink == null)
@@ -67,7 +67,7 @@ public abstract class Damageable : MonoBehaviour {
     }
 
     // healing
-    public virtual void applyHealing(float healing)
+    public virtual void applyHealing(int healing)
     {
         // check the healing is positive
         if (healing < 0)

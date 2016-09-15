@@ -25,11 +25,7 @@ public class WeaponBar : Bar {
     // change values instantly
     public void switchWeapon(PlayerWeapon weapon)
     {
-        // stop all lerping
-        StopAllCoroutines();
-        isLerping = false;
-
-        // set values
+        // set values directly
         float proportion = 0.0f;
         if (weapon.isMaxLevel())
             proportion = 1.0f;
@@ -41,7 +37,10 @@ public class WeaponBar : Bar {
         }
 
         imageBar.fillAmount = proportion;
-        imageDelayedBar.fillAmount = proportion;
+        imageBarBehind.fillAmount = proportion;
+
+        // update value
+        update(weapon.experience, weapon.getExpForNextLevel());
 
         // update number of level
         textLevel.text = weapon.level.ToString();
@@ -52,7 +51,7 @@ public class WeaponBar : Bar {
 
     private void changeColor(Color color)
     {
-        imageDelayedBar.color = new Color(color.r, color.g, color.b, imageDelayedBar.color.a);
+        imageBarBehind.color = color / 2;
         imageBar.color = color;
         imageWeaponIndicator.color = color;
     }

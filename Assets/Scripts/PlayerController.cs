@@ -21,6 +21,7 @@ public class PlayerController : Damageable {
     public int initialLife;
     public float moveSpeed;
     public float tiltFactor;
+    public float rateExpToHp;
     public PlayerWeapons weapons;
     public GameObject objEngine;
 
@@ -82,7 +83,7 @@ public class PlayerController : Damageable {
     }
 
     // add functions to update the UI of health
-    public override void applyDamage(float damage)
+    public override void applyDamage(int damage)
     {
         if (!_isImmune)
         {
@@ -94,32 +95,44 @@ public class PlayerController : Damageable {
         }
     }
 
-    public void applyHealing(int healing)
+    public override void applyHealing(int healing)
     {
-        // healing
-        _health += healing;
-        if (_health > maxHealth)
-            _health = maxHealth;
+        if (healing > 0)
+        {
+            // healing
+            _health += healing;
+            if (_health > maxHealth)
+                _health = maxHealth;
 
-        // stop blinking
-        float proportionHealth = _health / maxHealth;
-        if (proportionHealth >= 0.25f)
-            stopBlinkOnLowHealth();
+            // stop blinking
+            float proportionHealth = _health / maxHealth;
+            if (proportionHealth >= 0.25f)
+                stopBlinkOnLowHealth();
 
-        // update UI
-        healthCircle.update(_health, maxHealth);
+            // update UI
+            healthCircle.update(_health, maxHealth);
+        }
     }
 
     public void addWeaponExp(int exp)
     {
-        // add exp to current weapon
-        bool isUpgraded = _currentWeapon.addExperience(exp);
+        // weapon is not max
+        if (!_currentWeapon.isMaxLevel())
+        {
+            // add exp to current weapon
+            bool isUpgraded = _currentWeapon.addExperience(exp);
 
-        // update UI
-        if (isUpgraded)
-            weaponCircle.switchWeapon(_currentWeapon);
+            // update UI
+            if (isUpgraded)
+                weaponCircle.switchWeapon(_currentWeapon);
+            else
+                weaponCircle.update(_currentWeapon);
+        }
         else
-            weaponCircle.update(_currentWeapon);
+        {
+            // exceeding exp would transfer to health
+            applyHealing((int)(exp * rateExpToHp));
+        }
     }
 
     // add max health

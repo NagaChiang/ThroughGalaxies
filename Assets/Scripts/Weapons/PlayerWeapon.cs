@@ -26,16 +26,13 @@ public abstract class PlayerWeapon : Weapon {
     // return true to indicate updgrading
     public bool addExperience(int exp)
     {
-        // ignore any exp after maxed out
-        if (isMaxLevel())
-            return false;
-
-        // add
-        experience += exp;
-
-        // check upgrade
+        // if not maxed out
         if (level < _MAX_LEVEL)
         {
+            // add
+            experience += exp;
+
+            // upgrade
             int expForNextLevel = getExpForNextLevel();
             if (experience >= expForNextLevel)
             {

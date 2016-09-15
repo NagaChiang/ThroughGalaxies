@@ -6,74 +6,60 @@ public abstract class Bar : MonoBehaviour {
 
     public float delayedTime;
     public float lerpTime;
-    public Image imageDelayedBar;
+    public Image imageBarBehind;
     public Image imageBar;
 
-    protected bool isLerping;
+    private float _lastUpdateTime = 0.0f;
+    private float _currentValue = 0.0f;
 
-    protected void Start()
+    void Update()
     {
-        // initial properties
-        isLerping = false;
+        // instant update depending on increasing or decreasing
+        if(_currentValue > imageBarBehind.fillAmount)
+        {
+            // increasing
+            imageBarBehind.fillAmount = _currentValue;
+        }
+        else if(_currentValue < imageBar.fillAmount)
+        {
+            // decreasing
+            imageBar.fillAmount = _currentValue;
+        }
+
+        // delay effect for filled amount updating
+        if((Time.time - _lastUpdateTime) >= delayedTime)
+        {
+            // bar front
+            lerpBarToValue(imageBar, _currentValue);
+
+            // bar behind
+            lerpBarToValue(imageBarBehind, _currentValue);
+        }
     }
 
     public void update(float value, float max)
     {
+        // record the update time stamp
+        _lastUpdateTime = Time.time;
+
         // filled area of image bar
-        updateFilledBar(value, max);
-        updateDelayedBar(value, max);
-    }
-
-    private void updateFilledBar(float value, float max)
-    {
-        float lastProportion = imageBar.fillAmount;
         float proportion = value / max;
         if (proportion < 0)
             proportion = 0.0f;
 
-        // delayed effect when being healed
-        if (proportion >= lastProportion)
-            StartCoroutine(lerpImageFilledAmountTo(imageBar, proportion));
-        else
-            imageBar.fillAmount = proportion;
+        // update true value
+        _currentValue = proportion;
     }
 
-    private void updateDelayedBar(float value, float max)
+    private void lerpBarToValue(Image bar, float destValue)
     {
-        float lastProportion = imageDelayedBar.fillAmount;
-        float proportion = value / max;
-        if (proportion < 0)
-            proportion = 0.0f;
+        // move gradually
+        float diff = _currentValue - bar.fillAmount;
+        bar.fillAmount += diff * (Time.deltaTime / lerpTime);
 
-        // delayed effect when being damaged
-        if (proportion < lastProportion)
-            StartCoroutine(lerpImageFilledAmountTo(imageDelayedBar, proportion));
-        else
-            imageDelayedBar.fillAmount = proportion;
-    }
-
-    private IEnumerator lerpImageFilledAmountTo(Image image, float valueNew)
-    {
-        // delay
-        yield return new WaitForSeconds(delayedTime);
-
-        // wait for unfinished lerping
-        while (isLerping)
-            yield return null;
-
-        // get value again
-        float valueLast = image.fillAmount;
-
-        // lerp to new value
-        isLerping = true;
-        for (float time = 0.0f; time < lerpTime; time += Time.deltaTime)
-        {
-            image.fillAmount = Mathf.Lerp(valueLast, valueNew, time / lerpTime);
-            yield return null;
-        }
-        image.fillAmount = valueNew;
-
-        // end the lerping
-        isLerping = false;
+        // threshold to complement little gap
+        float threshold = 0.025f;
+        if (Mathf.Abs(_currentValue - bar.fillAmount) < threshold)
+            bar.fillAmount = _currentValue;
     }
 }

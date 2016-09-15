@@ -44,8 +44,7 @@ public class HealthBar : Bar {
 
         // assign to bars
         imageBar.color = newColor;
-        imageDelayedBar.color = new Color(newColor.r, newColor.g, newColor.b,
-                                            imageDelayedBar.color.a);
+        imageBarBehind.color = newColor / 2;
     }
 
     private void updateText(float value, float max)

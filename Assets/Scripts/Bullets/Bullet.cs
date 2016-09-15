@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour {
     public float accelerationDelay;
     public float acceleration;
     public float accAcceleration;
-    public float damage;
+    public int damage;
     public LineRenderer lineBulletPath;
 
     private float _startTime;
