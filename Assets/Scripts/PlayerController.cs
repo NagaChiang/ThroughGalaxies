@@ -210,7 +210,7 @@ public class PlayerController : Damageable {
         int expDrop = _currentWeapon.experience;
         _currentWeapon.experience = 0;
         expDrop = (int)(expDrop * proportionExpDrop);
-        weaponCircle.update(_currentWeapon); // TODO: bug
+        weaponCircle.update(_currentWeapon);
 
         GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         if (gameManager == null)

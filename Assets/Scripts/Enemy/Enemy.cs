@@ -73,6 +73,13 @@ public class Enemy : Damageable {
         // add score to game manager
         _gameManager.addScore(score);
 
+        // show score popup text
+        PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
+        if (popupManager)
+            popupManager.showMessage(score.ToString(), transform.position);
+        else
+            Debug.LogError("Can't find the PopupTextManager.");
+
         // fire weapon on destroy
         if (weaponOnDestroy)
             weaponOnDestroy.fire();
