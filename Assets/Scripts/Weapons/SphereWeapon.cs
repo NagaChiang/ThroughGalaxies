@@ -20,7 +20,7 @@ public class SphereWeapon : PlayerWeapon {
                 break;
 
             case 2:
-                // cooldown reduction
+                // CDR
                 fireCooldown = cooldownReducted;
                 Instantiate(bullet, transform.position, rot);
                 break;

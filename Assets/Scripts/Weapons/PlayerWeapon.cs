@@ -6,7 +6,7 @@ public abstract class PlayerWeapon : Weapon {
     public Vector3 sideFireOffset;
     public Color color;
 
-    public int experience { get; private set; }
+    public int experience { get; set; }
     public int level { get; private set; }
 
     private const int _MAX_LEVEL = 5;

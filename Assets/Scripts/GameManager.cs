@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour {
             exp -= crystal.experience;
 
             // random position within a circle
-            Vector2 posInUnitCircle = Random.insideUnitCircle;
+            Vector2 posInUnitCircle = Random.insideUnitCircle * radius;
             Vector3 position = center + new Vector3(posInUnitCircle.x, 0.0f, posInUnitCircle.y);
 
             // instantiate game object
@@ -247,11 +247,11 @@ public class GameManager : MonoBehaviour {
     {
         // get all the objects to be cleared
         List<GameObject[]> listObjects = new List<GameObject[]>();
+        listObjects.Add(GameObject.FindGameObjectsWithTag("Wave"));
         listObjects.Add(GameObject.FindGameObjectsWithTag("Enemy"));
         listObjects.Add(GameObject.FindGameObjectsWithTag("Bullet"));
         listObjects.Add(GameObject.FindGameObjectsWithTag("Powerup"));
         listObjects.Add(GameObject.FindGameObjectsWithTag("Asteroid"));
-        listObjects.Add(GameObject.FindGameObjectsWithTag("Wave"));
 
         // clear these objects
         foreach (GameObject[] objs in listObjects)

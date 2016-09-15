@@ -28,6 +28,8 @@ public class PlayerController : Damageable {
     public float respawnDelay;
     public float immuneDuration;
     public float immuneBlinkInterval;
+    public float proportionExpDrop;
+    public float extendRangeExpDrop;
 
     [Header("Boundary")]
     public Limit boundaryX;
@@ -203,12 +205,27 @@ public class PlayerController : Damageable {
         // explosion vfx
         Instantiate(vfxExplosion, transform.position, transform.rotation);
 
+        // drop experience as penalty
+        // TODO: new weapon
+        int expDrop = _currentWeapon.experience;
+        _currentWeapon.experience = 0;
+        expDrop = (int)(expDrop * proportionExpDrop);
+        weaponCircle.update(_currentWeapon); // TODO: bug
+
+        GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        if (gameManager == null)
+            Debug.LogError("Can't find the GameManager.");
+        else
+        {
+            Vector3 pos = transform.position;
+            float radius = GetComponent<Collider>().bounds.extents.x + extendRangeExpDrop;
+            gameManager.dropExperience(pos, radius, expDrop);
+        }
+
         // turn off renderer and collider
         setVisible(false);
         GetComponent<Collider>().enabled = false;
         transform.position = new Vector3(0.0f, 10.0f, 0.0f); // place outside
-
-        // drop TODO
     }
 
     private IEnumerator immuneOnRespawn(float duration, float interval)
