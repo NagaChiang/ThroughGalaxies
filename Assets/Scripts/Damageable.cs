@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Renderer))]
 public abstract class Damageable : MonoBehaviour {
 
     [Header("Damageable")]
