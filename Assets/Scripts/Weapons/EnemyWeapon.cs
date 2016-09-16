@@ -5,7 +5,14 @@ using System.Collections;
 
 public class EnemyWeapon : Weapon {
 
-    protected override IEnumerator doFire()
+    [Header("Advanced")]
+    public float fireOffsetAngle;
+    public float shotInterval;
+    public int shotPerFire;
+    public int bulletPerShot;
+    public float shotAngleRange;
+
+    protected override IEnumerator doFire(float fireOffsetAngle = 0)
     {
         for (int i = 0; i < shotPerFire; i++)
         {
@@ -13,7 +20,7 @@ public class EnemyWeapon : Weapon {
             {
                 // straight shot
                 Vector3 pos = new Vector3(transform.position.x, 0.0f, transform.position.z);
-                Quaternion rot = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f);
+                Quaternion rot = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y + fireOffsetAngle, 0.0f);
                 Instantiate(bullet, pos, rot);
             }
             else
@@ -30,7 +37,7 @@ public class EnemyWeapon : Weapon {
 
                 Quaternion lookRotation = transform.rotation;
                 lookRotation.SetLookRotation(transform.forward, Vector3.up); // get rid off tilting
-                Quaternion quatStart = lookRotation * Quaternion.Euler(0.0f, -shotAngleRange / 2, 0.0f);
+                Quaternion quatStart = lookRotation * Quaternion.Euler(0.0f, fireOffsetAngle - shotAngleRange / 2, 0.0f);
                 for (int j = 0; j < bulletPerShot; j++)
                 {
                     Vector3 pos = new Vector3(transform.position.x, 0.0f, transform.position.z);

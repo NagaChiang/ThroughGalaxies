@@ -4,6 +4,7 @@ using System;
 
 public class Enemy : Damageable {
 
+    [Header("Enemy")]
     public int score;
     public float tiltFactor;
     public float rotateSpeed; // prior than tilt
@@ -13,7 +14,7 @@ public class Enemy : Damageable {
 
     private GameManager _gameManager;
 
-    new void Start()
+    protected override void Start()
     {
         // from Damageable
         base.Start();
@@ -24,19 +25,7 @@ public class Enemy : Damageable {
             Debug.LogError("Can't find the GameManager.");
     }
 
-    void OnTriggerEnter(Collider other)
-    {   
-        // hit player
-        if (other.tag == "Player")
-        {
-            // apply damage depending on remaining health
-            Damageable target = other.GetComponent<Damageable>();
-            if (target != null)
-                target.applyDamage(maxHealth);
-        }
-    }
-
-    protected void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         // update position (check boundary)
         Rigidbody rigidbody = GetComponent<Rigidbody>();
@@ -63,6 +52,18 @@ public class Enemy : Damageable {
                                                     rigidbody.velocity.x * tiltFactor);
         }
 
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        // hit player
+        if (other.tag == "Player")
+        {
+            // apply damage depending on remaining health
+            Damageable target = other.GetComponent<Damageable>();
+            if (target != null)
+                target.applyDamage(maxHealth);
+        }
     }
 
     protected override void destroy()

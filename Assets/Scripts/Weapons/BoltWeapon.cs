@@ -7,7 +7,7 @@ public class BoltWeapon : PlayerWeapon {
     public int sideShotAngle_1;
     public int sideShotAngle_2;
 
-    protected override IEnumerator doFire()
+    protected override IEnumerator doFire(float fireOffsetAngle = 0)
     {
         // side fire position
         updateSideFirePosition();

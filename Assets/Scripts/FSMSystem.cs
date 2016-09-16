@@ -28,7 +28,7 @@ public class FSMSystem {
     public abstract class State
     {
 
-        private Dictionary<Transition, StateID> map = new Dictionary<Transition, StateID>();
+        private Dictionary<Transition, StateID> Map = new Dictionary<Transition, StateID>();
         public StateID ID { get; private set; }
 
         public void AddTransition(Transition trans, StateID id)
@@ -48,13 +48,13 @@ public class FSMSystem {
 
             // Since this is a Deterministic FSM,
             // check if the current transition was already inside the map
-            if (map.ContainsKey(trans))
+            if (Map.ContainsKey(trans))
             {
                 Debug.LogError("FSMState ERROR: State " + ID.ToString() + " already has transition " + trans.ToString() + ".");
                 return;
             }
 
-            map.Add(trans, id);
+            Map.Add(trans, id);
         }
 
         public void DeleteTransition(Transition trans)
@@ -67,9 +67,9 @@ public class FSMSystem {
             }
 
             // Check if the pair is inside the map before deleting
-            if (map.ContainsKey(trans))
+            if (Map.ContainsKey(trans))
             {
-                map.Remove(trans);
+                Map.Remove(trans);
             }
             else
             {
@@ -82,9 +82,9 @@ public class FSMSystem {
         public StateID GetOutputState(Transition trans)
         {
             // Check if the map has this transition
-            if (map.ContainsKey(trans))
+            if (Map.ContainsKey(trans))
             {
-                return map[trans];
+                return Map[trans];
             }
             else
             {
@@ -97,12 +97,12 @@ public class FSMSystem {
 
         public virtual void DoOnEntering() { }
         public virtual void DoOnLeaving() { }
-        public abstract void Reason(GameObject player, GameObject npc);
-        public abstract void Act(GameObject player, GameObject npc);
+        public abstract void Reason<T>(GameObject player, T npc);
+        public abstract void Act<T>(GameObject player, T npc);
     }
 
-    public State currentState { get; private set; }
-    private List<State> states = new List<State>();
+    public State CurrentState { get; private set; }
+    private List<State> States = new List<State>();
 
     public void AddState(State s)
     {
@@ -121,15 +121,15 @@ public class FSMSystem {
         }
 
         // The first State inserted is also the Initial state.
-        if (states.Count == 0)
+        if (States.Count == 0)
         {
-            states.Add(s);
-            currentState = s;
+            States.Add(s);
+            CurrentState = s;
             return;
         }
 
         // Add the state to the List if it's not inside it
-        foreach (State state in states)
+        foreach (State state in States)
         {
             if (state.ID == s.ID)
             {
@@ -140,7 +140,7 @@ public class FSMSystem {
         }
 
         // It's a new state, add it
-        states.Add(s);
+        States.Add(s);
     }
 
     public void DeleteState(StateID id)
@@ -153,11 +153,11 @@ public class FSMSystem {
         }
 
         // Search the List and delete the state if it's inside it
-        foreach (State state in states)
+        foreach (State state in States)
         {
             if (state.ID == id)
             {
-                states.Remove(state);
+                States.Remove(state);
                 return;
             }
         }
@@ -177,25 +177,25 @@ public class FSMSystem {
         }
 
         // Check if the target state exists
-        StateID targetID = currentState.GetOutputState(trans);
+        StateID targetID = CurrentState.GetOutputState(trans);
         if (targetID == StateID.NullStateID)
         {
-            Debug.LogError("FSM ERROR: State " + currentState.ID.ToString() + " does not have a target state " +
+            Debug.LogError("FSM ERROR: State " + CurrentState.ID.ToString() + " does not have a target state " +
                            " for transition " + trans.ToString() + ".");
             return;
         }
 
         // Find target state and update the currentState		
-        foreach (State state in states)
+        foreach (State state in States)
         {
             if (state.ID == targetID)
             {
                 // Leave current state
-                currentState.DoOnLeaving();
+                CurrentState.DoOnLeaving();
 
                 // Enter target state
-                currentState = state;
-                currentState.DoOnEntering();
+                CurrentState = state;
+                CurrentState.DoOnEntering();
                 break;
             }
         }

@@ -43,7 +43,12 @@ public class TargetingEnemy : Enemy {
         {
             while (objPlayer)
             {
-                transform.LookAt(objPlayer.transform.position, transform.up);
+                // if not respawning (temporary moved to higher place)
+                if (objPlayer.transform.position.y == 0)
+                {
+                    transform.LookAt(objPlayer.transform.position, transform.up);
+                }
+
                 yield return null;
             }
         }

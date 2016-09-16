@@ -8,7 +8,7 @@ public class SphereWeapon : PlayerWeapon {
     public GameObject sphereAreaEnhanced;
     public GameObject sphereAreaUltimate;
 
-    protected override IEnumerator doFire()
+    protected override IEnumerator doFire(float fireOffsetAngle = 0)
     {
         // fire depending on current level
         Quaternion rot = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f);

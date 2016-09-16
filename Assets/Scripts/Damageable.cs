@@ -19,7 +19,7 @@ public abstract class Damageable : MonoBehaviour {
     // low health blinking coroutine
     private Coroutine _coroutineLowHealthBlink;
 
-    protected void Start ()
+    protected virtual void Start ()
     {
         // initial health
         _health = maxHealth;
