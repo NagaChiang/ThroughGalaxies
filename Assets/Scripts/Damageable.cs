@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Renderer))]
 public abstract class Damageable : MonoBehaviour {
 
     [Header("Damageable")]
@@ -11,7 +10,7 @@ public abstract class Damageable : MonoBehaviour {
     public float healDropRate;
     public bool enabledDropSupply;
 
-    protected int _health;
+    public int health { get; protected set; }
 
     // blinking effect on hit
     private Shader _shaderNormal;
@@ -22,7 +21,7 @@ public abstract class Damageable : MonoBehaviour {
     protected virtual void Start ()
     {
         // initial health
-        _health = maxHealth;
+        health = maxHealth;
 
         // save the normal color
         Material material = GetComponentInChildren<Renderer>().material;
@@ -40,12 +39,12 @@ public abstract class Damageable : MonoBehaviour {
         }
 
         // reduce health
-        _health -= damage;
+        health -= damage;
 
         // dead
-        if (_health <= 0)
+        if (health <= 0)
         {
-            _health = 0;
+            health = 0;
 
             // destroy this gameObject
             destroy();
@@ -56,7 +55,7 @@ public abstract class Damageable : MonoBehaviour {
         StartCoroutine(blinkOnHit());
 
         // low health
-        float proportionHealth = (float)_health / maxHealth;
+        float proportionHealth = (float)health / maxHealth;
         if (proportionHealth < 0.25f)
         {
             if (_coroutineLowHealthBlink == null)
@@ -78,14 +77,14 @@ public abstract class Damageable : MonoBehaviour {
         }
 
         // gain health
-        _health += healing;
+        health += healing;
 
         // health cap
-        if (_health > maxHealth)
-            _health = maxHealth;
+        if (health > maxHealth)
+            health = maxHealth;
 
         // remove low health blinking
-        float proportionHealth = _health / maxHealth;
+        float proportionHealth = health / maxHealth;
         if (proportionHealth >= 0.25f)
         {
             // stop blinking

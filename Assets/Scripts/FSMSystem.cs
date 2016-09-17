@@ -18,18 +18,22 @@ public class FSMSystem {
     public enum Transition
     {
         NullTransition = 0,
+        LowHealth,
+        MediumHealth,
     }
 
     public enum StateID
     {
         NullStateID = 0,
+        Battleship_HighHealthState,
+        Battleship_MediumHealthState,
+        Battleship_LowHealthState,
     }
 
     public abstract class State
     {
-
         private Dictionary<Transition, StateID> Map = new Dictionary<Transition, StateID>();
-        public StateID ID { get; private set; }
+        public StateID ID { get; protected set; }
 
         public void AddTransition(Transition trans, StateID id)
         {
@@ -97,8 +101,8 @@ public class FSMSystem {
 
         public virtual void DoOnEntering() { }
         public virtual void DoOnLeaving() { }
-        public abstract void Reason<T>(GameObject player, T npc);
-        public abstract void Act<T>(GameObject player, T npc);
+        public abstract void Reason(GameObject player, GameObject npc);
+        public abstract void Act(GameObject player, GameObject npc);
     }
 
     public State CurrentState { get; private set; }
@@ -180,7 +184,7 @@ public class FSMSystem {
         StateID targetID = CurrentState.GetOutputState(trans);
         if (targetID == StateID.NullStateID)
         {
-            Debug.LogError("FSM ERROR: State " + CurrentState.ID.ToString() + " does not have a target state " +
+            Debug.LogError("FSM ERROR: State " + CurrentState.ID.ToString() + " does not have a target state" +
                            " for transition " + trans.ToString() + ".");
             return;
         }

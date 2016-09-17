@@ -6,9 +6,9 @@ using System.Collections;
 public class EnemyWeapon : Weapon {
 
     [Header("Advanced")]
-    public float fireOffsetAngle;
     public float shotInterval;
     public int shotPerFire;
+    public float bulletInterval;
     public int bulletPerShot;
     public float shotAngleRange;
 
@@ -43,11 +43,16 @@ public class EnemyWeapon : Weapon {
                     Vector3 pos = new Vector3(transform.position.x, 0.0f, transform.position.z);
                     Quaternion rot = quatStart * Quaternion.Euler(0.0f, j * angleBetweenBullet, 0.0f);
                     Instantiate(bullet, pos, rot);
+
+                    // bullet interval
+                    if(bulletInterval > 0)
+                        yield return new WaitForSeconds(bulletInterval);
                 }
             }
 
             // shot interval
-            yield return new WaitForSeconds(shotInterval);
+            if(shotInterval > 0)
+                yield return new WaitForSeconds(shotInterval);
         }
     }
 }

@@ -91,7 +91,7 @@ public class PlayerController : Damageable {
             base.applyDamage(damage);
 
             // update UI of health
-            healthCircle.update(_health, maxHealth);
+            healthCircle.update(health, maxHealth);
         }
     }
 
@@ -100,17 +100,17 @@ public class PlayerController : Damageable {
         if (healing > 0)
         {
             // healing
-            _health += healing;
-            if (_health > maxHealth)
-                _health = maxHealth;
+            health += healing;
+            if (health > maxHealth)
+                health = maxHealth;
 
             // stop blinking
-            float proportionHealth = _health / maxHealth;
+            float proportionHealth = health / maxHealth;
             if (proportionHealth >= 0.25f)
                 stopBlinkOnLowHealth();
 
             // update UI
-            healthCircle.update(_health, maxHealth);
+            healthCircle.update(health, maxHealth);
         }
     }
 
@@ -204,7 +204,7 @@ public class PlayerController : Damageable {
 
         // set initial properties, and turn on renderer and collider
         applyHealing(maxHealth);
-        healthCircle.update(_health, maxHealth); // why update again?
+        healthCircle.update(health, maxHealth); // why update again?
         gameObject.transform.position = Vector3.zero;
         setVisible(true);
         GetComponent<Collider>().enabled = true;

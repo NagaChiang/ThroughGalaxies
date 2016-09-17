@@ -21,5 +21,15 @@ public abstract class Weapon : MonoBehaviour {
         }
     }
 
+    public void aimFire(Vector3 posTarget)
+    {
+        // calculate the angle to target
+        Quaternion quat = Quaternion.FromToRotation(transform.forward, posTarget - transform.position);
+        float angle = quat.eulerAngles.y;
+
+        // pass to fire
+        fire(angle);
+    }
+
     protected abstract IEnumerator doFire(float fireOffsetAngle = 0);
 }
