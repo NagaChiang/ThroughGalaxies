@@ -57,8 +57,8 @@ public abstract class PlayerWeapon : Weapon {
         int exp = 0;
         if (lv >= 2 && lv <= _MAX_LEVEL)
             exp = _EXP_FOR_LEVEL[lv - 2];
-        else
-            Debug.LogWarning("Invalid requested level: " + lv.ToString());
+        //else
+            //Debug.LogWarning("Invalid requested level: " + lv.ToString());
 
         return exp;
     }

@@ -28,6 +28,9 @@ public class FSMSystem {
         Battleship_HighHealthState,
         Battleship_MediumHealthState,
         Battleship_LowHealthState,
+        Mothership_HighHealthState,
+        Mothership_MediumHealthState,
+        Mothership_LowHealthState,
     }
 
     public abstract class State

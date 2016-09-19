@@ -49,13 +49,13 @@ public abstract class Boss : Enemy {
         weapon.fire();
     }
 
-    public IEnumerator delayAimFire(Weapon weapon, Vector3 posTarget, float time)
+    public IEnumerator delayAimFire(Weapon weapon, GameObject obj, float time)
     {
         // delay
         yield return new WaitForSeconds(time);
 
         // fire
-        weapon.aimFire(posTarget);
+        weapon.aimFire(obj);
     }
 
     protected abstract void InitializeFSM();

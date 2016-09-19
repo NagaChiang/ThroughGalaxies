@@ -53,7 +53,7 @@ public class Battleship_HighHealthState : FSMSystem.State
         {
             // drop to medium health
             float hpProportion = (float)Battleship.health / Battleship.maxHealth;
-            if (hpProportion < 0.5f)
+            if (hpProportion < 0.6f)
                 Battleship.SetTransition(FSMSystem.Transition.MediumHealth);
         }
         else
@@ -100,8 +100,8 @@ public class Battleship_HighHealthState : FSMSystem.State
                 Battleship.weapons[1].fire();
 
                 // Side bolts
-                Battleship.StartCoroutine(Battleship.delayAimFire(Battleship.weapons[4], player.transform.position, 1.0f));
-                Battleship.StartCoroutine(Battleship.delayAimFire(Battleship.weapons[5], player.transform.position, 1.0f));
+                Battleship.StartCoroutine(Battleship.delayAimFire(Battleship.weapons[4], player, 1.0f));
+                Battleship.StartCoroutine(Battleship.delayAimFire(Battleship.weapons[5], player, 1.0f));
             }
         }
         else
@@ -118,7 +118,7 @@ public class Battleship_HighHealthState : FSMSystem.State
             rigidbody.velocity = new Vector3(0.0f, 0.0f, rigidbody.velocity.z);
 
         // Short delay to wait for bubbles gone
-        Battleship.NextFireTime = Time.time + 2.5f;
+        Battleship.NextFireTime = Time.time + 3.0f;
     }
 }
 
@@ -167,8 +167,8 @@ public class Battleship_MediumHealthState : FSMSystem.State
                 battleship.StartCoroutine(battleship.delayFire(battleship.weapons[3], 0.75f));
 
                 // Side bolts
-                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[4], player.transform.position, 1.5f));
-                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[5], player.transform.position, 1.5f));
+                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[4], player, 1.5f));
+                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[5], player, 1.5f));
             }
         }
         else
@@ -210,12 +210,12 @@ public class Battleship_LowHealthState : FSMSystem.State
                 battleship.weapons[1].fire();
 
                 // Side bolts
-                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[4], player.transform.position, 0.5f));
-                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[5], player.transform.position, 1.0f));
+                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[4], player, 0.5f));
+                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[5], player, 1.0f));
 
                 // Side spheres
-                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[2], player.transform.position, 2.0f));
-                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[3], player.transform.position, 2.5f));
+                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[2], player, 2.0f));
+                battleship.StartCoroutine(battleship.delayAimFire(battleship.weapons[3], player, 2.5f));
             }
         }
         else
