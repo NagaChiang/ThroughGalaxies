@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour {
     public GameObject UiHud;
     public GameObject UiGameover;
     public Text UiTextDisplay;
+    public GameObject UiBossStatus;
 
     private int _score;
     private float _difficultyFactor;

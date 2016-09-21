@@ -1,11 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public abstract class Boss : Enemy {
 
-    [Header("FSM")]
+    [Header("Boss")]
+    public string BossName;
+
+    // FSM
     protected FSMSystem Fsm;
     protected GameObject Player;
+
+    // UI
+    private GameObject UI_BossStatus;
+    private Text UI_TextName;
+    private HealthBar UI_HealthBar;
 
     protected override void Start()
     {
@@ -19,6 +28,9 @@ public abstract class Boss : Enemy {
         Player = GameObject.FindWithTag("Player");
         if (Player == null)
             Debug.LogError("Can't find the game object of player.");
+
+        // Get UI
+        InitializeUI();
     }
 
     protected override void FixedUpdate()
@@ -32,6 +44,15 @@ public abstract class Boss : Enemy {
             Fsm.CurrentState.Reason(Player, gameObject);
             Fsm.CurrentState.Act(Player, gameObject);
         }
+    }
+
+    public override void applyDamage(int damage)
+    {
+        base.applyDamage(damage);
+
+        // Update health bar
+        if (UI_HealthBar)
+            UI_HealthBar.update(health, maxHealth);
     }
 
     public void SetTransition(FSMSystem.Transition trans)
@@ -56,6 +77,44 @@ public abstract class Boss : Enemy {
 
         // fire
         weapon.aimFire(obj);
+    }
+    protected override void destroy()
+    {
+        // Disable UI
+        UI_BossStatus.SetActive(false);
+
+        // Base
+        base.destroy();
+    }
+
+    private void InitializeUI()
+    {
+        // Get game manager first
+        GameManager gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+
+        // Get boss status UI from game manager
+        UI_BossStatus = gameManager.UiBossStatus;
+        if (UI_BossStatus)
+        {
+            // Activate
+            UI_BossStatus.SetActive(true);
+
+            // Find the rest of UI
+            UI_TextName = UI_BossStatus.transform.Find("BossName").GetComponent<Text>();
+            UI_HealthBar = UI_BossStatus.transform.Find("BossHealthBar").GetComponent<HealthBar>();
+
+            // Set boss name
+            if (UI_TextName)
+                UI_TextName.text = BossName;
+
+            // Update health bar
+            if (UI_HealthBar)
+                UI_HealthBar.update(health, maxHealth);
+        }
+        else
+        {
+            Debug.LogError("Can't find the UI for this boss.");
+        }
     }
 
     protected abstract void InitializeFSM();
