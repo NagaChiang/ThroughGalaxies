@@ -19,7 +19,6 @@ public class MothershipBoss : Boss {
         if(IsAccelerating)
         {
             GetComponent<Rigidbody>().velocity += transform.forward * VerticalAcc * Time.deltaTime;
-            print(VerticalAcc * Time.deltaTime);
         }
 
         // make move decision
@@ -52,7 +51,7 @@ public class MothershipBoss : Boss {
                         rigidbody.velocity = transform.forward * VerticalSpeed;
                     else if (stateLevel == 1)
                     {
-                        float bonus = 5.0f;
+                        float bonus = 3.0f;
                         rigidbody.velocity = transform.forward * VerticalSpeed * bonus;
                     }
                     else if (stateLevel == 2)

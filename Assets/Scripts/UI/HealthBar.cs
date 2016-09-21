@@ -17,12 +17,14 @@ public class HealthBar : Bar {
         updateBarColor(value, max);
 
         // update text
-        updateText(value, max);
+        if(textValue)
+            updateText(value, max);
     }
 
     public void updateLife(int life)
     {
-        textLife.text = life.ToString();
+        if(textLife)
+            textLife.text = life.ToString();
     }
 
     private void updateBarColor(float value, float max)

@@ -10,7 +10,7 @@ public class CameraResizer : MonoBehaviour {
 	void Start ()
     {
         // Get camera
-        Camera camera = GetComponent<Camera>();
+        //Camera camera = GetComponent<Camera>();
 
         // set aspect ratio
         //camera.aspect = (float)Width / Height;
