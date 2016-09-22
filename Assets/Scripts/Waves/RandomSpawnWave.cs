@@ -13,6 +13,7 @@ public struct RandomSpawnSet
 
 public class RandomSpawnWave : Wave
 {
+    [Header("RandomSpawnWave")]
     public RandomSpawnSet[] randomSpawnSets;
 
     public override void spawn(float difficulty) // TODO difficulty
@@ -26,6 +27,7 @@ public class RandomSpawnWave : Wave
 
     private IEnumerator spawnSet(RandomSpawnSet set, float difficulty)
     {
+        GameObject enemy = null;
         for (int i = 0; i < set.number; i++)
         {
             // x range
@@ -39,10 +41,21 @@ public class RandomSpawnWave : Wave
             GameObject obj = set.objects[Random.Range(0, set.objects.Length)];
 
             // instantiate
-            Instantiate(obj, posSpawn, obj.transform.rotation);
+            enemy = (GameObject)Instantiate(obj, posSpawn, obj.transform.rotation);
 
             // interval
             yield return new WaitForSeconds(set.interval);
         }
+
+        // Handle boss wave
+        if(isBoss)
+        {
+            // Wait until the boss dies
+            while (enemy)
+                yield return null;
+        }
+
+        // Destroy self
+        Destroy(gameObject);
     }
 }

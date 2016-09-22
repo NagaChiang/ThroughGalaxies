@@ -223,8 +223,16 @@ public class GameManager : MonoBehaviour {
                     }
 
                     // wait and destroy
-                    yield return new WaitForSeconds(wave.duration - shuttleDelay);
-                    Destroy(objWave);
+                    if (objWave.GetComponent<Wave>().isBoss)
+                    {
+                        // Wait until the boss dies
+                        while (objWave)
+                            yield return null;
+                    }
+                    else
+                    {
+                        yield return new WaitForSeconds(wave.duration - shuttleDelay);
+                    }
                 }
             }
 
