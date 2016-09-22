@@ -9,6 +9,7 @@ public class Enemy : Damageable {
     public float tiltFactor;
     public float rotateSpeed; // prior than tilt
     public Limit boundaryX;
+    public Limit boundaryZ;
     public Weapon[] weapons;
     public Weapon weaponOnDestroy; // fire on destroy
 
@@ -29,12 +30,12 @@ public class Enemy : Damageable {
     {
         // update position (check boundary)
         Rigidbody rigidbody = GetComponent<Rigidbody>();
-        rigidbody.position = new Vector3
-        (
-            Mathf.Clamp(rigidbody.position.x, boundaryX.min, boundaryX.max),
-            rigidbody.position.y,
-            rigidbody.position.z    
-        );
+        float posX = Mathf.Clamp(rigidbody.position.x, boundaryX.min, boundaryX.max);
+        float posZ = rigidbody.position.z;
+        if (boundaryZ.max > 0)
+            posZ = Mathf.Clamp(posZ, boundaryZ.min, boundaryZ.max);
+
+        rigidbody.position = new Vector3(posX, 0.0f, posZ);
 
         // update rotation
         if (rotateSpeed != 0)

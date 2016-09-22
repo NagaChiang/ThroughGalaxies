@@ -35,7 +35,9 @@ public class Bullet : MonoBehaviour {
         if (lineBulletPath)
         {
             // attach instance to bullet itself
-            _bulletPath = Instantiate(lineBulletPath);
+            _bulletPath = (LineRenderer)Instantiate(lineBulletPath,
+                                            lineBulletPath.transform.position,
+                                            lineBulletPath.transform.rotation);
             _bulletPath.transform.SetParent(gameObject.transform);
         }
     }

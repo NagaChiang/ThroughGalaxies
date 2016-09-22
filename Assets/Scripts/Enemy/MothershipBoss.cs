@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// Weapon 0, 1: side bubble red 
+
 public class MothershipBoss : Boss {
 
     [Header("Mothership")]
@@ -8,7 +10,9 @@ public class MothershipBoss : Boss {
     public float HorizontalSpeed;
     public float VerticalSpeed;
     public float VerticalAcc;
+    public GameObject Droid;
 
+    public float NextFireTime { get; set; }
     private bool IsAccelerating;
     private float NextMoveTime;
 
@@ -88,6 +92,21 @@ public class MothershipBoss : Boss {
         }
     }
 
+    // Ramdomly choose a direction to release the Droid
+    public void releaseDroid()
+    {
+        // Random direction
+        Vector2 unitDir;
+        unitDir.x = -Mathf.Sign(transform.position.x) * Random.Range(0.5f, 1.0f);
+        unitDir.y = -Random.value; // always towards down
+
+        // Release it with speed
+        GameObject droid = Instantiate(Droid, transform.position, transform.rotation) as GameObject;
+        float speed = 5.0f;
+        Vector3 vel = new Vector3(unitDir.x * speed, 0.0f, unitDir.y * speed);
+        droid.GetComponent<Rigidbody>().velocity = vel;
+    }
+
     protected override void InitializeFSM()
     {
         // states and transitions
@@ -124,6 +143,24 @@ public class Mothership_HighHealthState : FSMSystem.State
             float hpProportion = (float)mothership.health / mothership.maxHealth;
             if (hpProportion < 0.6f)
                 mothership.SetTransition(FSMSystem.Transition.MediumHealth);
+
+            // Use weapons
+            if(Time.time >= mothership.NextFireTime)
+            {
+                // Set cooldown
+                float cooldown = 5f;
+                mothership.NextFireTime = Time.time + cooldown;
+
+                // Release droid
+                if (npc.transform.position.z <= mothership.posZ.max - 2)
+                {
+                    mothership.releaseDroid();
+                }
+
+                // Side bubble red
+                mothership.weapons[0].fire();
+                mothership.weapons[1].fire();
+            }
         }
         else
         {
@@ -179,6 +216,27 @@ public class Mothership_MediumHealthState : FSMSystem.State
         {
             // control the move
             mothership.move(1);
+
+            // Use weapons
+            if (Time.time >= mothership.NextFireTime)
+            {
+                // Set cooldown
+                float cooldown = 5f;
+                mothership.NextFireTime = Time.time + cooldown;
+
+                // Release droid
+                if (npc.transform.position.z <= mothership.posZ.max - 2)
+                {
+                    mothership.releaseDroid();
+                    mothership.releaseDroid();
+                }
+
+                // Side bubble red
+                mothership.weapons[0].fire();
+                mothership.weapons[1].fire();
+                mothership.StartCoroutine(mothership.delayFire(mothership.weapons[0], 2.5f));
+                mothership.StartCoroutine(mothership.delayFire(mothership.weapons[1], 2.5f));
+            }
         }
         else
         {
@@ -207,6 +265,27 @@ public class Mothership_LowHealthState : FSMSystem.State
         {
             // control the move
             mothership.move(2);
+
+            // Use weapons
+            if (Time.time >= mothership.NextFireTime)
+            {
+                // Set cooldown
+                float cooldown = 5.0f;
+                mothership.NextFireTime = Time.time + cooldown;
+
+                // Release droid
+                if (npc.transform.position.z <= mothership.posZ.max - 2)
+                {
+                    mothership.releaseDroid();
+                    mothership.releaseDroid();
+                }
+
+                // Side bubble red
+                mothership.weapons[0].aimFire(player);
+                mothership.weapons[1].aimFire(player);
+                mothership.StartCoroutine(mothership.delayAimFire(mothership.weapons[0], player, 2.5f));
+                mothership.StartCoroutine(mothership.delayAimFire(mothership.weapons[1], player, 2.5f));
+            }
         }
         else
         {

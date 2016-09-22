@@ -10,14 +10,17 @@ public class TargetingEnemy : Enemy {
 
     private Rigidbody _rigidbody;
 
-    new void Start()
+    protected override void Start()
     {
         // from Enemy (also Damageable)
         base.Start();
 
         // move down (-z)
-        _rigidbody = GetComponent<Rigidbody>();
-        _rigidbody.velocity = Vector3.back * initialSpeed;
+        if (initialSpeed > 0)
+        {
+            _rigidbody = GetComponent<Rigidbody>();
+            _rigidbody.velocity = Vector3.back * initialSpeed;
+        }
 
         // keep looking at the player and firing
         StartCoroutine(targeting());
@@ -29,7 +32,7 @@ public class TargetingEnemy : Enemy {
         yield return new WaitForSeconds(Random.Range(durationStart.min, durationStart.max));
 
         // change the velocity
-        _rigidbody.velocity = Vector3.back * verticalSpeed;
+        GetComponent<Rigidbody>().velocity = Vector3.back * verticalSpeed;
 
         // keep firing
         foreach (Weapon weapon in weapons)
@@ -43,7 +46,7 @@ public class TargetingEnemy : Enemy {
         {
             while (objPlayer)
             {
-                // if not respawning (temporary moved to higher place)
+                // if player not respawning (temporary moved to higher place)
                 if (objPlayer.transform.position.y == 0)
                 {
                     transform.LookAt(objPlayer.transform.position, transform.up);
