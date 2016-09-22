@@ -20,7 +20,7 @@ public abstract class PlayerWeapon : Weapon {
     {
         // initial properties
         experience = 0;
-        level = 3;
+        level = 1;
     }
 
     // return true to indicate updgrading
