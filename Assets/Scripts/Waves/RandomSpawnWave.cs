@@ -42,6 +42,7 @@ public class RandomSpawnWave : Wave
 
             // instantiate
             enemy = (GameObject)Instantiate(obj, posSpawn, obj.transform.rotation);
+            enemy.GetComponent<Damageable>().SetDifficulty(difficulty);
 
             // interval
             yield return new WaitForSeconds(set.interval);

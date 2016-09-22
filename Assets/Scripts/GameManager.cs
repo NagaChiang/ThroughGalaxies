@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour {
 
         // initial properties
         _score = 0;
-        _difficultyFactor = 1.0f;
+        _difficultyFactor = 2.0f;
         _stage = 1;
 
         // update score UI
@@ -188,56 +188,63 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator spawnWaves()
     {
-        // for each galaxy
-        foreach (Stage galaxy in galaxies)
+        // While player not die
+        while (true)
         {
-            // stage display start
-            UiTextDisplay.text = "Galaxy " + _stage.ToString();
-            UiTextDisplay.gameObject.SetActive(true);
-            BgScroller.isBoostEnabled = true;
-
-            // stage display end
-            yield return new WaitForSeconds(stageInterval);
-            UiTextDisplay.gameObject.SetActive(false);
-            BgScroller.isBoostEnabled = false;
-
-            // spawn waves one by one
-            foreach (Wave wave in galaxy.waves)
+            // for each galaxy
+            foreach (Stage galaxy in galaxies)
             {
-                if (wave != null)
+                // stage display start
+                UiTextDisplay.text = "Galaxy " + _stage.ToString();
+                UiTextDisplay.gameObject.SetActive(true);
+                BgScroller.isBoostEnabled = true;
+
+                // stage display end
+                yield return new WaitForSeconds(stageInterval);
+                UiTextDisplay.gameObject.SetActive(false);
+                BgScroller.isBoostEnabled = false;
+
+                // spawn waves one by one
+                foreach (Wave wave in galaxy.waves)
                 {
-                    // spawn wave
-                    GameObject objWave = Instantiate(wave.gameObject);
-                    objWave.GetComponent<Wave>().spawn(_difficultyFactor);
+                    if (wave != null)
+                    {
+                        // spawn wave
+                        GameObject objWave = Instantiate(wave.gameObject);
+                        objWave.GetComponent<Wave>().spawn(_difficultyFactor);
 
-                    // spawn shuttle or not
-                    float roll = Random.value;
-                    float shuttleDelay = 0.0f;
-                    if(roll <= probShuttleSpawnPerWave)
-                    {
-                        // spawn at random time in wave
-                        shuttleDelay = Random.Range(0.0f, wave.duration);
-                        yield return new WaitForSeconds(shuttleDelay);
-                        Vector3 pos = new Vector3(Random.Range(posXShuttle.min, posXShuttle.max + 1), 0.0f, posZShuttle);
-                        Instantiate(objShuttle, pos, objShuttle.transform.rotation);
-                    }
+                        // spawn shuttle or not
+                        float roll = Random.value;
+                        float shuttleDelay = 0.0f;
+                        if (roll <= probShuttleSpawnPerWave)
+                        {
+                            // spawn at random time in wave
+                            shuttleDelay = Random.Range(0.0f, wave.duration);
+                            yield return new WaitForSeconds(shuttleDelay);
+                            Vector3 pos = new Vector3(Random.Range(posXShuttle.min, posXShuttle.max + 1), 0.0f, posZShuttle);
+                            Instantiate(objShuttle, pos, objShuttle.transform.rotation);
+                        }
 
-                    // wait and destroy
-                    if (objWave.GetComponent<Wave>().isBoss)
-                    {
-                        // Wait until the boss dies
-                        while (objWave)
-                            yield return null;
-                    }
-                    else
-                    {
-                        yield return new WaitForSeconds(wave.duration - shuttleDelay);
+                        // wait and destroy
+                        if (objWave.GetComponent<Wave>().isBoss)
+                        {
+                            // Wait until the boss dies
+                            while (objWave)
+                                yield return null;
+                        }
+                        else
+                        {
+                            yield return new WaitForSeconds(wave.duration - shuttleDelay);
+                        }
                     }
                 }
+
+                // next atage
+                _stage++;
             }
 
-            // next atage
-            _stage++;
+            // Raise the difficulty
+            _difficultyFactor += 1.0f;
         }
     }
 

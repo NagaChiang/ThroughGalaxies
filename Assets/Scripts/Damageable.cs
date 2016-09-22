@@ -28,6 +28,14 @@ public abstract class Damageable : MonoBehaviour {
         _shaderNormal = material.shader;
     }
 
+    // Raising the diffuculty
+    public void SetDifficulty(float difficulty)
+    {
+        // Change health and heal to full
+        maxHealth = (int)(maxHealth * difficulty);
+        health = maxHealth;
+    }
+
     // taking damage
     public virtual void applyDamage(int damage)
     {
