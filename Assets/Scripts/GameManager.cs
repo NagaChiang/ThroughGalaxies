@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour {
 
         // initial properties
         _score = 0;
-        _difficultyFactor = 2.0f;
+        _difficultyFactor = 1.0f;
         _stage = 1;
 
         // update score UI
@@ -222,7 +222,8 @@ public class GameManager : MonoBehaviour {
                             shuttleDelay = Random.Range(0.0f, wave.duration);
                             yield return new WaitForSeconds(shuttleDelay);
                             Vector3 pos = new Vector3(Random.Range(posXShuttle.min, posXShuttle.max + 1), 0.0f, posZShuttle);
-                            Instantiate(objShuttle, pos, objShuttle.transform.rotation);
+                            Damageable shuttle = (Damageable)Instantiate(objShuttle, pos, objShuttle.transform.rotation);
+                            shuttle.SetDifficulty(_difficultyFactor);
                         }
 
                         // wait and destroy

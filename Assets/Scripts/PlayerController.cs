@@ -72,6 +72,16 @@ public class PlayerController : Damageable {
         if (Input.GetButton("Fire1"))
             _currentWeapon.fire();
 
+        // End of laser
+        if (_currentWeapon == weapons.Laser)
+        {
+            if (Input.GetButtonUp("Fire1"))
+            {
+                // End laser
+                ((LaserWeapon)_currentWeapon).endFire();
+            }
+        }
+
         // handle weapon switching
         handleWeaponSelect();
     }
@@ -176,13 +186,23 @@ public class PlayerController : Damageable {
     private void handleWeaponSelect()
     {
         if (Input.GetButtonDown("Weapon1"))
+        {
             loadWeapon(weapons.Bolt);
+
+            // For laser
+            ((LaserWeapon)weapons.Laser).endFire();
+        }
 
         else if (Input.GetButtonDown("Weapon2"))
+        {
             loadWeapon(weapons.Sphere);
 
+            // For laser
+            ((LaserWeapon)weapons.Laser).endFire();
+        }
+
         else if (Input.GetButtonDown("Weapon3"))
-            loadWeapon(weapons.Bolt);
+            loadWeapon(weapons.Laser);
     }
 
     private void loadWeapon(PlayerWeapon weapon)

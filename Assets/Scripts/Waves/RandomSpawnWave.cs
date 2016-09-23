@@ -16,7 +16,7 @@ public class RandomSpawnWave : Wave
     [Header("RandomSpawnWave")]
     public RandomSpawnSet[] randomSpawnSets;
 
-    public override void spawn(float difficulty) // TODO difficulty
+    public override void spawn(float difficulty)
     {
         // spawn each set
         foreach(RandomSpawnSet set in randomSpawnSets)
@@ -27,6 +27,14 @@ public class RandomSpawnWave : Wave
 
     private IEnumerator spawnSet(RandomSpawnSet set, float difficulty)
     {
+        // Set Difficulty
+        if (!isBoss)
+        {
+            set.number = (int)(set.number * difficulty);
+            set.interval = set.interval / difficulty;
+        }
+        
+        // Spawn
         GameObject enemy = null;
         for (int i = 0; i < set.number; i++)
         {

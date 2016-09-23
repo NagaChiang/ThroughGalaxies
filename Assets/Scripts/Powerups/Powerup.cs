@@ -8,7 +8,7 @@ public abstract class Powerup : MonoBehaviour {
 
     // player collecting prefernces
     private const float COLLECT_FORCE_FACTOR = 40.0f;
-    private const float COLLECT_RANGE = 4.0f;
+    private const float COLLECT_RANGE = 2.5f;
 
     private bool isLooted;
 

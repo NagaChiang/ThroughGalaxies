@@ -56,10 +56,6 @@ public class Bullet : MonoBehaviour {
         // update bullet path
         if(_bulletPath)
         {
-            // Activate
-            if(!_bulletPath.gameObject.activeSelf)
-                _bulletPath.gameObject.SetActive(true);
-
             // set points
             Ray ray = new Ray(transform.position, transform.forward);
             _bulletPath.SetPosition(0, transform.position);
