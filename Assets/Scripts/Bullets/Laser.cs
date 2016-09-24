@@ -5,6 +5,7 @@ public class Laser : MonoBehaviour {
 
     [Header("Laser")]
     public BulletSource BulletSource;
+    public bool isPiercing;
     public float Width;
     public float DamagePerSecond;
     public float DamageInterval;
@@ -29,7 +30,8 @@ public class Laser : MonoBehaviour {
         float maxLength = 50.0f;
         RaycastHit hitInfo;
         Vector3 boxCenter = Vector3.zero;
-        if (Physics.Raycast(transform.position, transform.forward, out hitInfo, maxLength))
+        if (Physics.Raycast(transform.position, transform.forward, out hitInfo, maxLength)
+            && !isPiercing)
         {
             // Update line renderer
             LineLaser.SetPosition(1, hitInfo.point);
@@ -39,9 +41,12 @@ public class Laser : MonoBehaviour {
             laserLength = hitInfo.distance;
 
             // Play particle system to show burning
-            LaserBurn.transform.position = hitInfo.point + 5.0f * Vector3.up;
-            if(LaserBurn.isStopped)
-                LaserBurn.Play();
+            if (LaserBurn)
+            {
+                LaserBurn.transform.position = hitInfo.point + 5.0f * Vector3.up;
+                if (LaserBurn.isStopped)
+                    LaserBurn.Play();
+            }
         }
         else
         {
@@ -53,7 +58,7 @@ public class Laser : MonoBehaviour {
             laserLength = maxLength;
 
             // Stop particle system of burning
-            if (LaserBurn.isPlaying)
+            if (LaserBurn && LaserBurn.isPlaying)
                 LaserBurn.Stop();
         }
 

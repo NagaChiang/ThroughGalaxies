@@ -14,7 +14,7 @@ public abstract class PlayerWeapon : Weapon {
     protected Vector3 _posRightFire;
     protected Vector3 _posLeftFire;
 
-    protected int[] _EXP_FOR_LEVEL = { 100, 300, 500, 700}; // length = _MAX_LEVEL - 1
+    protected int[] _EXP_FOR_LEVEL = { 100, 300, 500, 1000 }; // length = _MAX_LEVEL - 1
 
     void Awake()
     {
@@ -24,7 +24,7 @@ public abstract class PlayerWeapon : Weapon {
     }
 
     // return true to indicate updgrading
-    public bool addExperience(int exp)
+    public virtual bool addExperience(int exp)
     {
         // if not maxed out
         if (level < _MAX_LEVEL)

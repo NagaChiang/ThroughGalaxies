@@ -3,6 +3,11 @@ using System.Collections;
 
 public class LaserWeapon : PlayerWeapon {
 
+    public GameObject BulletLv2;
+    public GameObject BulletLv3;
+    public GameObject BulletLv4;
+    public GameObject BulletLv5;
+
     private GameObject Laser;
 
     // When player release the key, end the laser
@@ -11,54 +16,52 @@ public class LaserWeapon : PlayerWeapon {
         Destroy(Laser);
     }
 
+    // Using new bullet after upgrading
+    public override bool addExperience(int exp)
+    {
+        bool isUpgraded = base.addExperience(exp);
+        if (isUpgraded)
+            endFire();
+
+        return isUpgraded;
+    }
+
     protected override IEnumerator doFire(float fireOffsetAngle = 0)
     {
         // fire depending on current level
-        switch (level)
+        if (!Laser)
         {
-            case 1:
-                if (!Laser)
-                {
+            switch (level)
+            {
+                case 1:
                     Laser = (GameObject)Instantiate(bullet, transform.position, transform.rotation);
                     Laser.transform.SetParent(transform);
-                }
-                break;
+                    break;
 
-            case 2:
-                if (!Laser)
-                {
-                    Laser = (GameObject)Instantiate(bullet, transform.position, transform.rotation);
+                case 2:
+                    Laser = (GameObject)Instantiate(BulletLv2, transform.position, transform.rotation);
                     Laser.transform.SetParent(transform);
-                }
-                break;
+                    break;
 
-            case 3:
-                if (!Laser)
-                {
-                    Laser = (GameObject)Instantiate(bullet, transform.position, transform.rotation);
+                case 3:
+                    Laser = (GameObject)Instantiate(BulletLv3, transform.position, transform.rotation);
                     Laser.transform.SetParent(transform);
-                }
-                break;
+                    break;
 
-            case 4:
-                if (!Laser)
-                {
-                    Laser = (GameObject)Instantiate(bullet, transform.position, transform.rotation);
+                case 4:
+                    Laser = (GameObject)Instantiate(BulletLv4, transform.position, transform.rotation);
                     Laser.transform.SetParent(transform);
-                }
-                break;
+                    break;
 
-            case 5:
-                if (!Laser)
-                {
-                    Laser = (GameObject)Instantiate(bullet, transform.position, transform.rotation);
+                case 5:
+                    Laser = (GameObject)Instantiate(BulletLv5, transform.position, transform.rotation);
                     Laser.transform.SetParent(transform);
-                }
-                break;
+                    break;
 
-            default:
-                Debug.LogWarning("Invalid weapon level: " + level.ToString());
-                break;
+                default:
+                    Debug.LogWarning("Invalid weapon level: " + level.ToString());
+                    break;
+            }
         }
 
         yield break;

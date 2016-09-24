@@ -8,6 +8,13 @@ public class HealthBar : Bar {
     public Text textValueMax;
     public Text textLife;
 
+    void Start()
+    {
+        // Replenish instantly
+        imageBar.fillAmount = 1.0f;
+        imageBarBehind.fillAmount = 1.0f;
+    }
+
     public new void update(float value, float max)
     {
         // update filled bar

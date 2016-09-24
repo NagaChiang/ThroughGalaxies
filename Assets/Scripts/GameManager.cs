@@ -222,8 +222,9 @@ public class GameManager : MonoBehaviour {
                             shuttleDelay = Random.Range(0.0f, wave.duration);
                             yield return new WaitForSeconds(shuttleDelay);
                             Vector3 pos = new Vector3(Random.Range(posXShuttle.min, posXShuttle.max + 1), 0.0f, posZShuttle);
-                            Damageable shuttle = (Damageable)Instantiate(objShuttle, pos, objShuttle.transform.rotation);
-                            shuttle.SetDifficulty(_difficultyFactor);
+                            Damageable shuttle = ((GameObject)Instantiate(objShuttle, pos, objShuttle.transform.rotation))
+                                                    .GetComponent<Damageable>();
+                            shuttle.SetDifficulty(_stage);
                         }
 
                         // wait and destroy

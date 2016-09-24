@@ -36,9 +36,7 @@ public class BoltWeapon : PlayerWeapon {
                 break;
 
             case 4:
-                // center shot + 2 sides shots + 4 shots with angle
-                Instantiate(bullet, transform.position, transform.rotation);
-
+                // 2 sides shots + 4 shots with angle
                 Instantiate(bullet, _posRightFire, transform.rotation);
                 Instantiate(bullet, _posLeftFire, transform.rotation);
 
