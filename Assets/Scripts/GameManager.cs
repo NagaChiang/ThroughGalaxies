@@ -212,6 +212,7 @@ public class GameManager : MonoBehaviour {
                         // spawn wave
                         GameObject objWave = Instantiate(wave.gameObject);
                         objWave.GetComponent<Wave>().spawn(_difficultyFactor);
+                        bool isBossWave = objWave.GetComponent<Wave>().isBoss;
 
                         // spawn shuttle or not
                         float roll = Random.value;
@@ -228,7 +229,7 @@ public class GameManager : MonoBehaviour {
                         }
 
                         // wait and destroy
-                        if (objWave.GetComponent<Wave>().isBoss)
+                        if (isBossWave)
                         {
                             // Wait until the boss dies
                             while (objWave)

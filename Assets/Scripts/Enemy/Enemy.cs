@@ -26,8 +26,11 @@ public class Enemy : Damageable {
             Debug.LogError("Can't find the GameManager.");
     }
 
-    protected virtual void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        // Damageable
+        base.FixedUpdate();
+
         // update position (check boundary)
         Rigidbody rigidbody = GetComponent<Rigidbody>();
         float posX = Mathf.Clamp(rigidbody.position.x, boundaryX.min, boundaryX.max);

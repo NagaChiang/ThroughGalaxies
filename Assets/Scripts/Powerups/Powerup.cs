@@ -7,8 +7,8 @@ public abstract class Powerup : MonoBehaviour {
     public float rotateFactor;
 
     // player collecting prefernces
-    private const float COLLECT_FORCE_FACTOR = 40.0f;
-    private const float COLLECT_RANGE = 2.5f;
+    private const float COLLECT_SPEED = 30.0f;
+    private const float COLLECT_RANGE = 5.0f;
 
     private bool isLooted;
 
@@ -30,7 +30,7 @@ public abstract class Powerup : MonoBehaviour {
         if (!isLooted)
         {
             // move towards player within a certain range
-            collected(COLLECT_FORCE_FACTOR, COLLECT_RANGE);
+            collected(COLLECT_SPEED, COLLECT_RANGE);
         }
     }
 
@@ -50,7 +50,7 @@ public abstract class Powerup : MonoBehaviour {
         }
     }
 
-    private void collected(float force, float range)
+    private void collected(float speed, float range)
     {
         // get player
         GameObject objPlayer = GameObject.FindWithTag("Player");
@@ -62,12 +62,12 @@ public abstract class Powerup : MonoBehaviour {
         float distance = Vector3.Distance(transform.position, posPlayer);
         if (distance <= range)
         {
-            // calculate the force applied to the powerup
-            Vector3 forceToPlayer = (posPlayer - transform.position).normalized; // direction
-            forceToPlayer *= force / distance;
+            // calculate the speed applied to the powerup
+            Vector3 speedToPlayer = (posPlayer - transform.position).normalized; // direction
+            speedToPlayer *= speed / distance;
 
-            // apply force to this powerup
-            GetComponent<Rigidbody>().AddForce(forceToPlayer);
+            // Set speed of this powerup
+            GetComponent<Rigidbody>().velocity = speedToPlayer;
         }
 
         // out of range

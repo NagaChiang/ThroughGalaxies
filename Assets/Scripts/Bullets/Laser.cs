@@ -59,7 +59,10 @@ public class Laser : MonoBehaviour {
 
             // Stop particle system of burning
             if (LaserBurn && LaserBurn.isPlaying)
+            {
                 LaserBurn.Stop();
+                LaserBurn.Clear();
+            }
         }
 
 

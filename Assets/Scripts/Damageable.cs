@@ -12,11 +12,13 @@ public abstract class Damageable : MonoBehaviour {
 
     public int health { get; protected set; }
 
+    // Blink on low health
+    private const float LOW_HEALTH_RATE = 0.25f;
+    private float NextColorChangeTime;
+    private bool IsNextColorRed;
+
     // blinking effect on hit
     private Shader _shaderNormal;
-
-    // low health blinking coroutine
-    private Coroutine _coroutineLowHealthBlink;
 
     protected virtual void Start ()
     {
@@ -26,6 +28,15 @@ public abstract class Damageable : MonoBehaviour {
         // save the normal color
         Material material = GetComponentInChildren<Renderer>().material;
         _shaderNormal = material.shader;
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        // Blink on low health
+        if(health < LOW_HEALTH_RATE * maxHealth)
+            blinkOnLowHealth();
+        else
+            GetComponentInChildren<Renderer>().material.color = Color.white;
     }
 
     // Raising the diffuculty
@@ -61,17 +72,6 @@ public abstract class Damageable : MonoBehaviour {
 
         // blinking effect
         StartCoroutine(blinkOnHit());
-
-        // low health
-        float proportionHealth = (float)health / maxHealth;
-        if (proportionHealth < 0.25f)
-        {
-            if (_coroutineLowHealthBlink == null)
-            {
-                // start blinking
-                _coroutineLowHealthBlink = StartCoroutine(blinkOnLowHealth());
-            }
-        }
     }
 
     // healing
@@ -90,14 +90,6 @@ public abstract class Damageable : MonoBehaviour {
         // health cap
         if (health > maxHealth)
             health = maxHealth;
-
-        // remove low health blinking
-        float proportionHealth = health / maxHealth;
-        if (proportionHealth >= 0.25f)
-        {
-            // stop blinking
-            stopBlinkOnLowHealth();
-        }
     }
 
     // display blinking effects once on hit
@@ -114,32 +106,33 @@ public abstract class Damageable : MonoBehaviour {
     }
 
     // display blinking effects while health is low
-    private IEnumerator blinkOnLowHealth()
+    private void blinkOnLowHealth()
     {
-        float blinkDuration = 0.15f;
-        float blinkInterval = 0.5f;
-        Color blinkColor = new Color(1.0f, 0.5f, 0.5f);
-        Color normalColor = Color.white;
-
-        // change the material to blink color for a while
-        Material material = GetComponentInChildren<Renderer>().material;
-        while (true)
+        if (Time.time >= NextColorChangeTime)
         {
-            // change color
-            material.color = blinkColor;
-            yield return new WaitForSeconds(blinkDuration);
+            float blinkInterval = 0.15f;
+            Color blinkColor = new Color(1.0f, 0.5f, 0.5f);
+            Color normalColor = Color.white;
 
-            // normal color
-            material.color = normalColor;
-            yield return new WaitForSeconds(blinkInterval);
+            // change the material to blink color for a while
+            Material material = GetComponentInChildren<Renderer>().material;
+            if(IsNextColorRed)
+            {
+                // Red
+                material.color = blinkColor;
+            }
+            else
+            {
+                // White
+                material.color = normalColor;
+            }
+
+            // Next color
+            IsNextColorRed = !IsNextColorRed;
+
+            // Next color change time
+            NextColorChangeTime = Time.time + blinkInterval;
         }
-    }
-
-    protected void stopBlinkOnLowHealth()
-    {
-        if(_coroutineLowHealthBlink != null)
-            StopCoroutine(_coroutineLowHealthBlink);
-        GetComponentInChildren<Renderer>().material.color = Color.white;
     }
 
     // things to do once the health drop below 0

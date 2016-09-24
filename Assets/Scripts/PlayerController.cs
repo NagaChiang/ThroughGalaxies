@@ -86,8 +86,11 @@ public class PlayerController : Damageable {
         handleWeaponSelect();
     }
 
-	void FixedUpdate()
+	protected override void FixedUpdate()
     {
+        // Damageable
+        base.FixedUpdate();
+
         // handle the movements
         move();
     }
@@ -113,11 +116,6 @@ public class PlayerController : Damageable {
             health += healing;
             if (health > maxHealth)
                 health = maxHealth;
-
-            // stop blinking
-            float proportionHealth = health / maxHealth;
-            if (proportionHealth >= 0.25f)
-                stopBlinkOnLowHealth();
 
             // update UI
             healthCircle.update(health, maxHealth);
@@ -239,7 +237,6 @@ public class PlayerController : Damageable {
         Instantiate(vfxExplosion, transform.position, transform.rotation);
 
         // drop experience as penalty
-        // TODO: new weapon
         int expDrop = _currentWeapon.experience;
         _currentWeapon.experience = 0;
         expDrop = (int)(expDrop * proportionExpDrop);
@@ -254,6 +251,13 @@ public class PlayerController : Damageable {
             float radius = GetComponent<Collider>().bounds.extents.x + extendRangeExpDrop;
             gameManager.dropExperience(pos, radius, expDrop);
         }
+
+        // Show popup text for experience dropped
+        PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
+        if (popupManager)
+            popupManager.showMessage("-" + (proportionExpDrop * 100).ToString() + "% EXP", transform.position);
+        else
+            Debug.LogError("Can't find the PopupTextManager.");
 
         // turn off renderer and collider
         setVisible(false);

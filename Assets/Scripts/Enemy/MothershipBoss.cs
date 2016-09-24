@@ -221,7 +221,7 @@ public class Mothership_MediumHealthState : FSMSystem.State
             if (Time.time >= mothership.NextFireTime)
             {
                 // Set cooldown
-                float cooldown = 5f;
+                float cooldown = 6f;
                 mothership.NextFireTime = Time.time + cooldown;
 
                 // Release droid
@@ -234,8 +234,8 @@ public class Mothership_MediumHealthState : FSMSystem.State
                 // Side bubble red
                 mothership.weapons[0].fire();
                 mothership.weapons[1].fire();
-                mothership.StartCoroutine(mothership.delayFire(mothership.weapons[0], 2.5f));
-                mothership.StartCoroutine(mothership.delayFire(mothership.weapons[1], 2.5f));
+                mothership.StartCoroutine(mothership.delayFire(mothership.weapons[0], 3.0f));
+                mothership.StartCoroutine(mothership.delayFire(mothership.weapons[1], 3.0f));
             }
         }
         else
@@ -270,7 +270,7 @@ public class Mothership_LowHealthState : FSMSystem.State
             if (Time.time >= mothership.NextFireTime)
             {
                 // Set cooldown
-                float cooldown = 5.0f;
+                float cooldown = 6.0f;
                 mothership.NextFireTime = Time.time + cooldown;
 
                 // Release droid
@@ -283,8 +283,8 @@ public class Mothership_LowHealthState : FSMSystem.State
                 // Side bubble red
                 mothership.weapons[0].aimFire(player);
                 mothership.weapons[1].aimFire(player);
-                mothership.StartCoroutine(mothership.delayAimFire(mothership.weapons[0], player, 2.5f));
-                mothership.StartCoroutine(mothership.delayAimFire(mothership.weapons[1], player, 2.5f));
+                mothership.StartCoroutine(mothership.delayAimFire(mothership.weapons[0], player, 3.0f));
+                mothership.StartCoroutine(mothership.delayAimFire(mothership.weapons[1], player, 3.0f));
             }
         }
         else
