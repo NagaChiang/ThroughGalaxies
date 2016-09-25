@@ -8,6 +8,7 @@ public abstract class Weapon : MonoBehaviour {
 
     public GameObject bullet;
     public float fireCooldown;
+    public float FireDuration;
 
     private float _nextFire;
 
@@ -32,5 +33,6 @@ public abstract class Weapon : MonoBehaviour {
         fire(angle);
     }
 
+    public virtual void endFire() { }
     protected abstract IEnumerator doFire(float fireOffsetAngle = 0);
 }

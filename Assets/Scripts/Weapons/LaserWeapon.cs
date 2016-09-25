@@ -11,9 +11,10 @@ public class LaserWeapon : PlayerWeapon {
     private GameObject Laser;
 
     // When player release the key, end the laser
-    public void endFire()
+    public override void endFire()
     {
-        Destroy(Laser);
+        if(Laser)
+            Destroy(Laser);
     }
 
     // Using new bullet after upgrading

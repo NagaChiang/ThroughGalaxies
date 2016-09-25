@@ -10,7 +10,7 @@ public class MothershipBoss : Boss {
     public float HorizontalSpeed;
     public float VerticalSpeed;
     public float VerticalAcc;
-    public GameObject Droid;
+    public GameObject[] Droids;
 
     public float NextFireTime { get; set; }
     private bool IsAccelerating;
@@ -95,13 +95,16 @@ public class MothershipBoss : Boss {
     // Ramdomly choose a direction to release the Droid
     public void releaseDroid()
     {
+        // Random droid
+        GameObject objDroid = Droids[Random.Range(0, Droids.Length)];
+
         // Random direction
         Vector2 unitDir;
         unitDir.x = -Mathf.Sign(transform.position.x) * Random.Range(0.5f, 1.0f);
         unitDir.y = -Random.value; // always towards down
 
         // Release it with speed
-        GameObject droid = Instantiate(Droid, transform.position, transform.rotation) as GameObject;
+        GameObject droid = Instantiate(objDroid, transform.position, transform.rotation) as GameObject;
         float speed = 5.0f;
         Vector3 vel = new Vector3(unitDir.x * speed, 0.0f, unitDir.y * speed);
         droid.GetComponent<Rigidbody>().velocity = vel;

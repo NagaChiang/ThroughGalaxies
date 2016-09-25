@@ -114,6 +114,7 @@ public class GameManager : MonoBehaviour {
         // TODO: check highscores
 
         // set the gameover menu active
+        UiTextDisplay.gameObject.SetActive(false);
         UiGameover.SetActive(true);
         _enabledEnterRestart = true;
     }

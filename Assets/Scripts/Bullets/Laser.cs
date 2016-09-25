@@ -9,67 +9,109 @@ public class Laser : MonoBehaviour {
     public float Width;
     public float DamagePerSecond;
     public float DamageInterval;
+    public float StartDelay;
 
     [Header("VFX")]
     public LineRenderer LineLaser;
-    public ParticleSystem LaserBurn; 
+    public ParticleSystem LaserBurn;
+    public LineRenderer LineBulletPath;
 
+    private const float _RAY_LENGTH = 50.0f;
+    private float StartTime;
     private float NextDamageTime;
+    private LineRenderer BulletPath;
+
+    void Start()
+    {
+        // Set time after delay
+        StartTime = Time.time + StartDelay;
+    }
 
     void Update()
+    {
+        // After delay
+        if (Time.time >= StartTime)
+        {
+            // Destroy bullet path
+            if (BulletPath)
+                Destroy(BulletPath);
+
+            // Update VFX of laser
+            RaycastHit hitInfo = UpdateVFXPosition(Width, _RAY_LENGTH, LineLaser, LaserBurn);
+
+            // Apply damage to targets
+            Vector3 boxCenter;
+            float laserLength;
+            if (hitInfo.collider)
+            {
+                // Hit something
+                boxCenter = (transform.position + hitInfo.point) / 2.0f;
+                laserLength = hitInfo.distance;
+            }
+            else
+            {
+                // No hit, user max length instead
+                boxCenter = transform.position + (_RAY_LENGTH / 2.0f) * transform.forward;
+                laserLength = _RAY_LENGTH;
+            }
+            UpdateDamage(boxCenter, Width, laserLength);
+        }
+
+        // Not start firing
+        else
+        {
+            // Update bullet path
+            UpdateBulletPath(_RAY_LENGTH, LineBulletPath);
+        }
+    }
+
+    private RaycastHit UpdateVFXPosition(float width, float rayMaxLength, LineRenderer lineLaser, ParticleSystem laserBurn)
     {
         // Follow parent
         transform.localPosition = Vector3.zero;
 
         // Set width and first point
-        LineLaser.SetWidth(Width, Width);
-        LineLaser.SetPosition(0, transform.position);
+        lineLaser.SetWidth(width, width);
+        lineLaser.SetPosition(0, transform.position);
 
         // Raycast to set length
-        float laserLength = 0.0f;
-        float maxLength = 50.0f;
         RaycastHit hitInfo;
-        Vector3 boxCenter = Vector3.zero;
-        if (Physics.Raycast(transform.position, transform.forward, out hitInfo, maxLength)
+        if (Physics.Raycast(transform.position, transform.forward, out hitInfo, rayMaxLength)
             && !isPiercing)
         {
             // Update line renderer
-            LineLaser.SetPosition(1, hitInfo.point);
-
-            // Box for damage
-            boxCenter = (transform.position + hitInfo.point) / 2.0f;
-            laserLength = hitInfo.distance;
+            lineLaser.SetPosition(1, hitInfo.point);
 
             // Play particle system to show burning
-            if (LaserBurn)
+            if (laserBurn)
             {
-                LaserBurn.transform.position = hitInfo.point + 5.0f * Vector3.up;
-                if (LaserBurn.isStopped)
-                    LaserBurn.Play();
+                laserBurn.transform.position = hitInfo.point + 5.0f * Vector3.up;
+                if (laserBurn.isStopped)
+                    laserBurn.Play();
             }
         }
         else
         {
             // Not hitting anything, use max length
-            LineLaser.SetPosition(1, transform.position + maxLength * transform.forward);
-
-            // Box for damage
-            boxCenter = transform.position + (maxLength / 2.0f) * transform.forward;
-            laserLength = maxLength;
+            lineLaser.SetPosition(1, transform.position + rayMaxLength * transform.forward);
 
             // Stop particle system of burning
-            if (LaserBurn && LaserBurn.isPlaying)
+            if (laserBurn && laserBurn.isPlaying)
             {
-                LaserBurn.Stop();
-                LaserBurn.Clear();
+                laserBurn.Stop();
+                laserBurn.Clear();
             }
         }
 
+        return hitInfo;
+    }
 
+    private void UpdateDamage(Vector3 boxCenter, float width, float totalLength)
+    {
         // Damage
         if (Time.time >= NextDamageTime)
         {
-            Collider[] colliders = Physics.OverlapBox(boxCenter, new Vector3(Width / 2.0f, 0.0f, laserLength / 2.0f));
+            Collider[] colliders = Physics.OverlapBox(boxCenter, new Vector3(width / 2.0f, 0.0f, totalLength / 2.0f), transform.rotation);
             foreach (Collider collider in colliders)
             {
                 // check null
@@ -113,6 +155,31 @@ public class Laser : MonoBehaviour {
 
             // Update next damage time
             NextDamageTime = Time.time + DamageInterval;
+        }
+    }
+
+    private void UpdateBulletPath(float rayLength, LineRenderer linePath)
+    {
+        if (linePath)
+        {
+            if (!BulletPath)
+            {
+                // Draw bullet path and attach instance to bullet itself
+                BulletPath = (LineRenderer)Instantiate(linePath,
+                                                linePath.transform.position,
+                                                linePath.transform.rotation);
+                BulletPath.transform.SetParent(gameObject.transform);
+            }
+            else
+            {
+                // Follow parent
+                transform.localPosition = Vector3.zero;
+
+                // Update bullet path
+                Ray ray = new Ray(transform.position, transform.forward);
+                BulletPath.SetPosition(0, transform.position);
+                BulletPath.SetPosition(1, ray.GetPoint(rayLength));
+            }
         }
     }
 }

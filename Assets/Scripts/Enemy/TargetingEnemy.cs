@@ -3,10 +3,12 @@ using System.Collections;
 
 public class TargetingEnemy : Enemy {
 
+    [Header("Targeting")]
     public float initialSpeed;
     public float verticalSpeed;
     public float firingDelay;
     public Limit durationStart;
+    public bool enabledTargetingOnce;
 
     private Rigidbody _rigidbody;
 
@@ -50,6 +52,10 @@ public class TargetingEnemy : Enemy {
                 if (objPlayer.transform.position.y == 0)
                 {
                     transform.LookAt(objPlayer.transform.position, transform.up);
+
+                    // Targeting once
+                    if (enabledTargetingOnce)
+                        yield break;
                 }
 
                 yield return null;
@@ -64,7 +70,16 @@ public class TargetingEnemy : Enemy {
 
         while (true)
         {
+            // Fire
             weapon.fire();
+
+            // End fire
+            if (weapon.FireDuration > 0)
+            {
+                yield return new WaitForSeconds(weapon.FireDuration);
+                weapon.endFire();
+            }
+
             yield return new WaitForSeconds(weapon.fireCooldown);
         }
     }
