@@ -97,6 +97,7 @@ public class MothershipBoss : Boss {
     {
         // Random droid
         GameObject objDroid = Droids[Random.Range(0, Droids.Length)];
+        objDroid.GetComponent<Damageable>().SetDifficulty(Difficulty);
 
         // Random direction
         Vector2 unitDir;
@@ -138,7 +139,7 @@ public class Mothership_HighHealthState : FSMSystem.State
 
     public override void Reason(GameObject player, GameObject npc)
     {
-        // get battleship
+        // get mothership
         MothershipBoss mothership = npc.GetComponent<MothershipBoss>();
         if (mothership)
         {
@@ -146,9 +147,24 @@ public class Mothership_HighHealthState : FSMSystem.State
             float hpProportion = (float)mothership.health / mothership.maxHealth;
             if (hpProportion < 0.6f)
                 mothership.SetTransition(FSMSystem.Transition.MediumHealth);
+        }
+        else
+        {
+            Debug.LogWarning("This state can only handle Mothership.");
+        }
+    }
+
+    public override void Act(GameObject player, GameObject npc)
+    {
+        // get mothership
+        MothershipBoss mothership = npc.GetComponent<MothershipBoss>();
+        if (mothership)
+        {
+            // control the move
+            mothership.move(0);
 
             // Use weapons
-            if(Time.time >= mothership.NextFireTime)
+            if (Time.time >= mothership.NextFireTime)
             {
                 // Set cooldown
                 float cooldown = 5f;
@@ -170,21 +186,6 @@ public class Mothership_HighHealthState : FSMSystem.State
             Debug.LogWarning("This state can only handle Mothership.");
         }
     }
-
-    public override void Act(GameObject player, GameObject npc)
-    {
-        // get mothership
-        MothershipBoss mothership = npc.GetComponent<MothershipBoss>();
-        if (mothership)
-        {
-            // control the move
-            mothership.move(0);
-        }
-        else
-        {
-            Debug.LogWarning("This state can only handle Mothership.");
-        }
-    }
 }
 
 public class Mothership_MediumHealthState : FSMSystem.State
@@ -196,11 +197,11 @@ public class Mothership_MediumHealthState : FSMSystem.State
 
     public override void Reason(GameObject player, GameObject npc)
     {
-        // get battleship
+        // get mothership
         MothershipBoss mothership = npc.GetComponent<MothershipBoss>();
         if (mothership)
         {
-            // drop to medium health
+            // drop to low health
             float hpProportion = (float)mothership.health / mothership.maxHealth;
             if (hpProportion < 0.25f)
                 mothership.SetTransition(FSMSystem.Transition.LowHealth);

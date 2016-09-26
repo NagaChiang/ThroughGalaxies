@@ -111,12 +111,20 @@ public class Laser : MonoBehaviour {
         // Damage
         if (Time.time >= NextDamageTime)
         {
+            ArrayList damagedObjIDs = new ArrayList();
             Collider[] colliders = Physics.OverlapBox(boxCenter, new Vector3(width / 2.0f, 0.0f, totalLength / 2.0f), transform.rotation);
             foreach (Collider collider in colliders)
             {
                 // check null
                 if (collider == null)
                     continue;
+
+                // check this game obj has been damaged or not
+                int objID = collider.gameObject.GetInstanceID();
+                if (damagedObjIDs.Contains(objID))
+                    continue;
+                else
+                    damagedObjIDs.Add(objID);
 
                 // ignore boundary and other bullets 
                 if (collider.tag == "Boundary"

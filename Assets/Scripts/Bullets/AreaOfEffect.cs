@@ -23,12 +23,20 @@ public class AreaOfEffect : MonoBehaviour {
         while (true)
         {
             // get all the colliders in range
+            ArrayList damagedObjIDs = new ArrayList();
             Collider[] hitColliders = Physics.OverlapSphere(center, rad);
             foreach (Collider collider in hitColliders)
             {
                 // check null
                 if (collider == null)
                     continue;
+
+                // check this game obj has been damaged or not
+                int objID = collider.gameObject.GetInstanceID();
+                if (damagedObjIDs.Contains(objID))
+                    continue;
+                else
+                    damagedObjIDs.Add(objID);
 
                 // ignore boundary and other bullets 
                 if (collider.tag == "Boundary"

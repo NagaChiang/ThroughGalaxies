@@ -72,14 +72,6 @@ public class TargetingEnemy : Enemy {
         {
             // Fire
             weapon.fire();
-
-            // End fire
-            if (weapon.FireDuration > 0)
-            {
-                yield return new WaitForSeconds(weapon.FireDuration);
-                weapon.endFire();
-            }
-
             yield return new WaitForSeconds(weapon.fireCooldown);
         }
     }

@@ -12,6 +12,8 @@ public abstract class Damageable : MonoBehaviour {
 
     public int health { get; protected set; }
 
+    protected float Difficulty;
+
     // Blink on low health
     private const float LOW_HEALTH_RATE = 0.25f;
     private float NextColorChangeTime;
@@ -42,6 +44,9 @@ public abstract class Damageable : MonoBehaviour {
     // Raising the diffuculty
     public void SetDifficulty(float difficulty)
     {
+        // Store the difficulty
+        Difficulty = difficulty;
+
         // Change health and heal to full
         maxHealth = (int)(maxHealth * difficulty);
         health = maxHealth;

@@ -12,6 +12,14 @@ public abstract class Bar : MonoBehaviour {
     private float _lastUpdateTime = 0.0f;
     private float _currentValue = 0.0f;
 
+    void Start()
+    {
+        // Replenish instantly
+        _currentValue = 1.0f;
+        imageBar.fillAmount = 1.0f;
+        imageBarBehind.fillAmount = 1.0f;
+    }
+
     void Update()
     {
         // instant update depending on increasing or decreasing

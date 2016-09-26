@@ -65,6 +65,11 @@ public class LaserWeapon : PlayerWeapon {
             }
         }
 
-        yield break;
+        // End the laser
+        if (FireDuration > 0)
+        {
+            yield return new WaitForSeconds(FireDuration);
+            endFire();
+        }
     }
 }

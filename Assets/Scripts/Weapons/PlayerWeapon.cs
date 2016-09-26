@@ -7,7 +7,7 @@ public abstract class PlayerWeapon : Weapon {
     public Color color;
 
     public int experience { get; set; }
-    public int level { get; private set; }
+    public int level { get; set; }
 
     private const int _MAX_LEVEL = 5;
 
