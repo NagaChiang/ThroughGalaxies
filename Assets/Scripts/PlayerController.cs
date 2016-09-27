@@ -22,6 +22,7 @@ public class PlayerController : Damageable {
     public float moveSpeed;
     public float tiltFactor;
     public float rateExpToHp;
+    public float WeaponGlobalCooldown;
     public PlayerWeapons weapons;
     public GameObject objEngine;
 
@@ -207,6 +208,9 @@ public class PlayerController : Damageable {
     {
         _currentWeapon = weapon;
 
+        // Global cooldown
+        _currentWeapon.NextFire = Time.time + WeaponGlobalCooldown;
+
         // update UI
         weaponCircle.switchWeapon(weapon);
     }
@@ -237,27 +241,30 @@ public class PlayerController : Damageable {
         Instantiate(vfxExplosion, transform.position, transform.rotation);
 
         // drop experience as penalty
-        int expDrop = _currentWeapon.experience;
-        _currentWeapon.experience = 0;
-        expDrop = (int)(expDrop * proportionExpDrop);
-        weaponCircle.update(_currentWeapon);
-
-        GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        if (gameManager == null)
-            Debug.LogError("Can't find the GameManager.");
-        else
+        if (!_currentWeapon.isMaxLevel())
         {
-            Vector3 pos = transform.position;
-            float radius = GetComponent<Collider>().bounds.extents.x + extendRangeExpDrop;
-            gameManager.dropExperience(pos, radius, expDrop);
-        }
+            int expDrop = _currentWeapon.experience;
+            _currentWeapon.experience = 0;
+            expDrop = (int)(expDrop * proportionExpDrop);
+            weaponCircle.update(_currentWeapon);
 
-        // Show popup text for experience dropped
-        PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
-        if (popupManager)
-            popupManager.showMessage("-" + (proportionExpDrop * 100).ToString() + "% EXP", transform.position);
-        else
-            Debug.LogError("Can't find the PopupTextManager.");
+            GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+            if (gameManager == null)
+                Debug.LogError("Can't find the GameManager.");
+            else
+            {
+                Vector3 pos = transform.position;
+                float radius = GetComponent<Collider>().bounds.extents.x + extendRangeExpDrop;
+                gameManager.dropExperience(pos, radius, expDrop);
+            }
+
+            // Show popup text for experience dropped
+            PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
+            if (popupManager)
+                popupManager.showMessage("-" + (proportionExpDrop * 100).ToString() + "% EXP", transform.position);
+            else
+                Debug.LogError("Can't find the PopupTextManager.");
+        }
 
         // turn off renderer and collider
         setVisible(false);

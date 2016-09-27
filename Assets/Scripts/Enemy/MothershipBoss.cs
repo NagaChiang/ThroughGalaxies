@@ -225,7 +225,7 @@ public class Mothership_MediumHealthState : FSMSystem.State
             if (Time.time >= mothership.NextFireTime)
             {
                 // Set cooldown
-                float cooldown = 6f;
+                float cooldown = 5f;
                 mothership.NextFireTime = Time.time + cooldown;
 
                 // Release droid
@@ -238,8 +238,6 @@ public class Mothership_MediumHealthState : FSMSystem.State
                 // Side bubble red
                 mothership.weapons[0].fire();
                 mothership.weapons[1].fire();
-                mothership.StartCoroutine(mothership.delayFire(mothership.weapons[0], 3.0f));
-                mothership.StartCoroutine(mothership.delayFire(mothership.weapons[1], 3.0f));
             }
         }
         else

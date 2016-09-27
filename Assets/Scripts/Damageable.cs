@@ -50,6 +50,9 @@ public abstract class Damageable : MonoBehaviour {
         // Change health and heal to full
         maxHealth = (int)(maxHealth * difficulty);
         health = maxHealth;
+
+        // Reduce the heal drop rate
+        healDropRate *= difficulty;
     }
 
     // taking damage

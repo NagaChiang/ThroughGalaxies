@@ -21,9 +21,11 @@ public class BoltWeapon : PlayerWeapon {
                 break;
             
             case 2:
-                // 2 sides shots
-                Instantiate(bullet, _posRightFire, transform.rotation);
-                Instantiate(bullet, _posLeftFire, transform.rotation);
+                // center + 2 angle
+                Instantiate(bullet, transform.position, transform.rotation);
+
+                Instantiate(bullet, _posRightFire, Quaternion.AngleAxis(sideShotAngle_1, Vector3.up));
+                Instantiate(bullet, _posLeftFire, Quaternion.AngleAxis(-sideShotAngle_1, Vector3.up));
                 break;
 
             case 3:
