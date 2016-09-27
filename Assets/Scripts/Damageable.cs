@@ -144,7 +144,7 @@ public abstract class Damageable : MonoBehaviour {
     }
 
     // things to do once the health drop below 0
-    protected virtual void destroy()
+    public virtual void destroy()
     {
         // explosion vfx
         Instantiate(vfxExplosion, transform.position, transform.rotation);

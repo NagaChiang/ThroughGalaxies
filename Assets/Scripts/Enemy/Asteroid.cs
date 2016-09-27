@@ -43,7 +43,7 @@ public class Asteroid : Damageable {
         }
     }
 
-    protected override void destroy()
+    public override void destroy()
     {
         // add score to game manager
         _gameManager.addScore(score);

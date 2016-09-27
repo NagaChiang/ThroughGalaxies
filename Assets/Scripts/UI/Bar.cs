@@ -12,7 +12,7 @@ public abstract class Bar : MonoBehaviour {
     private float _lastUpdateTime = 0.0f;
     private float _currentValue = 0.0f;
 
-    void Start()
+    void OnEnable()
     {
         // Replenish instantly
         _currentValue = 1.0f;
@@ -45,7 +45,7 @@ public abstract class Bar : MonoBehaviour {
         }
     }
 
-    public void update(float value, float max)
+    public virtual void update(float value, float max)
     {
         // record the update time stamp
         _lastUpdateTime = Time.time;

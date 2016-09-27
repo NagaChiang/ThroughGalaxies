@@ -43,7 +43,7 @@ public class PlayerController : Damageable {
     private int _remainingLife;
     private bool _isImmune;
 
-    new void Start()
+    protected override void Start()
     {
         // get HUDs
         healthCircle = GameObject.Find("HealthCircle").GetComponent<HealthBar>();
@@ -299,7 +299,7 @@ public class PlayerController : Damageable {
         objEngine.SetActive(isOn);
     }
 
-    protected override void destroy()
+    public override void destroy()
     {
         // die
         die();

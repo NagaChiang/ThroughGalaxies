@@ -24,8 +24,8 @@ public class BoltWeapon : PlayerWeapon {
                 // center + 2 angle
                 Instantiate(bullet, transform.position, transform.rotation);
 
-                Instantiate(bullet, _posRightFire, Quaternion.AngleAxis(sideShotAngle_1, Vector3.up));
-                Instantiate(bullet, _posLeftFire, Quaternion.AngleAxis(-sideShotAngle_1, Vector3.up));
+                Instantiate(bullet, _posRightFire, Quaternion.AngleAxis(sideShotAngle_2, Vector3.up));
+                Instantiate(bullet, _posLeftFire, Quaternion.AngleAxis(-sideShotAngle_2, Vector3.up));
                 break;
 
             case 3:
@@ -33,8 +33,8 @@ public class BoltWeapon : PlayerWeapon {
                 Instantiate(bullet, _posRightFire, transform.rotation);
                 Instantiate(bullet, _posLeftFire, transform.rotation);
 
-                Instantiate(bullet, _posRightFire, Quaternion.AngleAxis(sideShotAngle_1, Vector3.up));
-                Instantiate(bullet, _posLeftFire, Quaternion.AngleAxis(-sideShotAngle_1, Vector3.up));
+                Instantiate(bullet, _posRightFire, Quaternion.AngleAxis(sideShotAngle_2, Vector3.up));
+                Instantiate(bullet, _posLeftFire, Quaternion.AngleAxis(-sideShotAngle_2, Vector3.up));
                 break;
 
             case 4:

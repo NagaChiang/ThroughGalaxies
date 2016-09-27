@@ -42,7 +42,7 @@ public class Laser : MonoBehaviour {
             // Apply damage to targets
             Vector3 boxCenter;
             float laserLength;
-            if (hitInfo.collider)
+            if (hitInfo.collider && !isPiercing)
             {
                 // Hit something
                 boxCenter = (transform.position + hitInfo.point) / 2.0f;
@@ -122,7 +122,9 @@ public class Laser : MonoBehaviour {
                 // check this game obj has been damaged or not
                 int objID = collider.gameObject.GetInstanceID();
                 if (damagedObjIDs.Contains(objID))
+                {
                     continue;
+                }
                 else
                     damagedObjIDs.Add(objID);
 
@@ -157,7 +159,9 @@ public class Laser : MonoBehaviour {
                     // apply damage to it
                     Damageable target = collider.GetComponent<Damageable>();
                     if (target != null)
+                    {
                         target.applyDamage((int)(DamagePerSecond * DamageInterval));
+                    }
                 }
             }
 

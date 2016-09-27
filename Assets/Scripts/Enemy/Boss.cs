@@ -78,7 +78,7 @@ public abstract class Boss : Enemy {
         // fire
         weapon.aimFire(obj);
     }
-    protected override void destroy()
+    public override void destroy()
     {
         // Disable UI
         UI_BossStatus.SetActive(false);

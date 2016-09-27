@@ -8,7 +8,7 @@ public class HealthBar : Bar {
     public Text textValueMax;
     public Text textLife;
 
-    public new void update(float value, float max)
+    public override void update(float value, float max)
     {
         // update filled bar
         base.update(value, max);

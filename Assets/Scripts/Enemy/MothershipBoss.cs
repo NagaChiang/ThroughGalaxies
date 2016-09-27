@@ -15,6 +15,7 @@ public class MothershipBoss : Boss {
     public float NextFireTime { get; set; }
     private bool IsAccelerating;
     private float NextMoveTime;
+    private ArrayList ReleasedDroids = new ArrayList();
 
     // forward/backward/dash; level 0, 1, 2
     public void move(int stateLevel)
@@ -109,6 +110,18 @@ public class MothershipBoss : Boss {
         float speed = 5.0f;
         Vector3 vel = new Vector3(unitDir.x * speed, 0.0f, unitDir.y * speed);
         droid.GetComponent<Rigidbody>().velocity = vel;
+
+        // Add to released list
+        ReleasedDroids.Add(droid);
+    }
+
+    private void DestroyAllDroids()
+    {
+        foreach(GameObject droid in ReleasedDroids)
+        {
+            if (droid)
+                droid.GetComponent<Damageable>().destroy();
+        }
     }
 
     protected override void InitializeFSM()
@@ -127,6 +140,14 @@ public class MothershipBoss : Boss {
         Fsm.AddState(highHealthState);
         Fsm.AddState(mediumHealthState);
         Fsm.AddState(lowHealthState);
+    }
+
+    public override void destroy()
+    {
+        // Destroy all remaining droids upon death
+        DestroyAllDroids();
+
+        base.destroy();
     }
 }
 

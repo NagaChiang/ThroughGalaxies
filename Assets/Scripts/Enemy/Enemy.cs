@@ -70,7 +70,7 @@ public class Enemy : Damageable {
         }
     }
 
-    protected override void destroy()
+    public override void destroy()
     {
         // temp fix... TODO
         _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
