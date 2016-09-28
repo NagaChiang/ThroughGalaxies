@@ -4,11 +4,12 @@ using System.Collections;
 public abstract class Damageable : MonoBehaviour {
 
     [Header("Damageable")]
-    public GameObject vfxExplosion;
     public int maxHealth;
     public int experience;
     public float healDropRate;
     public bool enabledDropSupply;
+    public bool EnabledShakeOnDeath;
+    public GameObject vfxExplosion;
 
     public int health { get; protected set; }
 
@@ -168,6 +169,10 @@ public abstract class Damageable : MonoBehaviour {
             // drop supply
             if (enabledDropSupply)
                 gameManager.dropRandomSupply(pos, radius);
+
+            // Shake on death
+            if(EnabledShakeOnDeath)
+                gameManager.Camera.SetShake(0.5f, 0.2f, 1.0f);
         }
 
         // destroy this game object

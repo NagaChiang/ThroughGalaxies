@@ -40,6 +40,9 @@ public class GameManager : MonoBehaviour {
     public Text UiTextDisplay;
     public GameObject UiBossStatus;
 
+    [Header("Misc")]
+    public CameraShaker Camera;
+
     private int _score;
     private float _difficultyFactor;
     private int _stage;
