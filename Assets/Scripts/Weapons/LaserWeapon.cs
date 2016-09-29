@@ -79,7 +79,11 @@ public class LaserWeapon : PlayerWeapon {
         // End the laser
         if (FireDuration > 0)
         {
-            yield return new WaitForSeconds(FireDuration - laser.StartDelay);
+            if (EnabledShaking)
+                yield return new WaitForSeconds(FireDuration - laser.StartDelay);
+            else
+                yield return new WaitForSeconds(FireDuration);
+
             endFire();
         }
     }

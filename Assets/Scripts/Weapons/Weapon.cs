@@ -10,7 +10,7 @@ public abstract class Weapon : MonoBehaviour {
     public float fireCooldown;
     public float FireDuration;
 
-    public float NextFire;
+    public float NextFire { get; set; }
 
     public void fire(float fireOffsetAngle = 0)
     {
