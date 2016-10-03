@@ -167,6 +167,8 @@ public class PlayerController : Damageable {
 
         // update velocity
         Vector3 movement = new Vector3(axisHorizontal, 0.0f, axisVertical);
+        if(movement.sqrMagnitude > 1.0f)
+            movement.Normalize();
         rigidbody.velocity = moveSpeed * movement;
 
         // update position

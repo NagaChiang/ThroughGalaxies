@@ -83,6 +83,7 @@ public class GameManager : MonoBehaviour {
         UiMenu.SetActive(false);
         UiHud.SetActive(true);
         UiGameover.SetActive(false);
+        UiBossStatus.SetActive(false);
 
         // stop last wave spawning
         if (RoutineWaveSpawn != null)
@@ -148,6 +149,12 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(UiHighscoreFromGameover.GetComponent<Highscore>().UpdateScores(data));
     }
 
+    public void showSubmitHighscore()
+    {
+        UiSubmitHighscore.SetActive(true);
+        UiInputName.ActivateInputField();
+    }
+
     public void showGameover()
     {
         // set the gameover menu active
@@ -179,7 +186,7 @@ public class GameManager : MonoBehaviour {
         if (id >= 0)
         {
             // show the form of submitting score
-            UiSubmitHighscore.SetActive(true);
+            showSubmitHighscore();
         }
         else
         {
@@ -347,7 +354,14 @@ public class GameManager : MonoBehaviour {
         string name = Regex.Replace(UiInputName.text, @"\s+", " "); // spaces
         name = Regex.Replace(name, @"^\s+", ""); // no leading space
         bool isFinished = false;
-        StartCoroutine(Database.SubmitHighscoreName(name, b => isFinished = b));
+
+        if (name != "")
+            StartCoroutine(Database.SubmitHighscoreName(name, b => isFinished = b));
+        else
+        {
+            // If the string is empty, skip
+            isFinished = true;
+        }
 
         // Wait for finished
         while (!isFinished)
@@ -363,9 +377,9 @@ public class GameManager : MonoBehaviour {
         List<GameObject[]> listObjects = new List<GameObject[]>();
         listObjects.Add(GameObject.FindGameObjectsWithTag("Wave"));
         listObjects.Add(GameObject.FindGameObjectsWithTag("Enemy"));
-        listObjects.Add(GameObject.FindGameObjectsWithTag("Bullet"));
         listObjects.Add(GameObject.FindGameObjectsWithTag("Powerup"));
         listObjects.Add(GameObject.FindGameObjectsWithTag("Asteroid"));
+        listObjects.Add(GameObject.FindGameObjectsWithTag("Bullet"));
 
         // clear these objects
         foreach (GameObject[] objs in listObjects)
