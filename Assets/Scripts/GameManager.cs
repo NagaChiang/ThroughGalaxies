@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using UnityEngine.Events;
 
 [System.Serializable]
 public struct Stage
@@ -37,12 +39,19 @@ public class GameManager : MonoBehaviour {
     public GameObject UiHowToPlay;
     public GameObject UiHud;
     public GameObject UiGameover;
+    public GameObject UiHighscoreFromMenu;
+    public GameObject UiHighscoreFromGameover;
+    public GameObject UiSubmitHighscore;
+    public InputField UiInputName;
     public Text UiTextDisplay;
     public GameObject UiBossStatus;
 
     [Header("Misc")]
     public CameraShaker Camera;
+    public HerokuDatabase Database;
 
+    private GameObject _player;
+    private Coroutine RoutineWaveSpawn;
     private int _score;
     private float _difficultyFactor;
     private int _stage;
@@ -62,22 +71,6 @@ public class GameManager : MonoBehaviour {
             restart();
     }
 
-    public void showMainMenu()
-    {
-        // disable other UI and enable main menu
-        UiMenu.SetActive(true);
-        UiHowToPlay.SetActive(false);
-        UiHud.SetActive(false);
-        UiGameover.SetActive(false);
-        _enabledEnterRestart = true;
-    }
-    public void showHowToPlay()
-    {
-        // enable how to play
-        UiMenu.SetActive(false);
-        UiHowToPlay.SetActive(true);
-    }
-
     public void restart()
     {
         // disable enter
@@ -91,8 +84,9 @@ public class GameManager : MonoBehaviour {
         UiHud.SetActive(true);
         UiGameover.SetActive(false);
 
-        // stop all previous coroutines
-        StopAllCoroutines();
+        // stop last wave spawning
+        if (RoutineWaveSpawn != null)
+            StopCoroutine(RoutineWaveSpawn);
 
         // initial properties
         _score = 0;
@@ -103,23 +97,104 @@ public class GameManager : MonoBehaviour {
         updateScoreUI(_score);
 
         // spawn player
-        Instantiate(player);
+        _player = Instantiate(player);
 
         // spawn waves
-        StartCoroutine(spawnWaves());
+        RoutineWaveSpawn = StartCoroutine(spawnWaves());
     }
 
-    public void gameover()
+    public void showMainMenu()
     {
-        // stop all coroutines
-        StopAllCoroutines();
+        // disable other UI and enable main menu
+        UiMenu.SetActive(true);
+        UiHowToPlay.SetActive(false);
+        UiHud.SetActive(false);
+        UiGameover.SetActive(false);
+        UiHighscoreFromMenu.SetActive(false);
+        _enabledEnterRestart = true;
+    }
+    public void showHowToPlay()
+    {
+        // enable how to play
+        UiMenu.SetActive(false);
+        UiHowToPlay.SetActive(true);
+    }
 
-        // TODO: check highscores
+    public void showHighscoreFromMainmenu()
+    {
+        // Enable ui
+        UiMenu.SetActive(false);
+        UiHighscoreFromMenu.SetActive(true);
 
+        // Update highscore
+        List<NameScoreData> data = new List<NameScoreData>();
+        StartCoroutine(Database.GetHighscoreData(data));
+        
+        // Pass to highscore to wait for coroutine finishing
+        StartCoroutine(UiHighscoreFromMenu.GetComponent<Highscore>().UpdateScores(data));
+    }
+
+    public void showHighscoreFromGameover()
+    {
+        // Enable ui
+        UiGameover.SetActive(false);
+        UiHighscoreFromGameover.SetActive(true);
+
+        // Update highscore
+        List<NameScoreData> data = new List<NameScoreData>();
+        StartCoroutine(Database.GetHighscoreData(data));
+
+        // Pass to highscore to wait for coroutine finishing
+        StartCoroutine(UiHighscoreFromGameover.GetComponent<Highscore>().UpdateScores(data));
+    }
+
+    public void showGameover()
+    {
         // set the gameover menu active
+        UiHighscoreFromGameover.SetActive(false);
         UiTextDisplay.gameObject.SetActive(false);
         UiGameover.SetActive(true);
         _enabledEnterRestart = true;
+    }
+
+    public IEnumerator gameover()
+    {
+        // Prepare player data
+        PlayerController playerController = _player.GetComponent<PlayerController>();
+        PlayerData data;
+        data.Score = _score;
+        data.Stage = _stage;
+        data.BoltLevel = playerController.weapons.Bolt.level;
+        data.SphereLevel = playerController.weapons.Sphere.level;
+        data.LaserLevel = playerController.weapons.Laser.level;
+        Destroy(_player);
+
+        // Submit data and wait for result
+        int id = Database.BUSY_STATE;
+        StartCoroutine(Database.SubmitPlayerData(data, value => id = value));
+        while (id == Database.BUSY_STATE)
+            yield return null;
+
+        // Check if it's a highscore
+        if (id >= 0)
+        {
+            // show the form of submitting score
+            UiSubmitHighscore.SetActive(true);
+        }
+        else
+        {
+            // set the gameover menu active
+            showGameover();
+        }
+    }
+
+    public void SubmitHighscore()
+    {
+        // Diable submit highscore UI
+        UiSubmitHighscore.SetActive(false);
+
+        // Start coroutine to submit
+        StartCoroutine(DoSubmitScore());
     }
 
     public void addScore(int num)
@@ -264,6 +339,22 @@ public class GameManager : MonoBehaviour {
 
         // update to GUI
         guiTextScore.text = strScore;
+    }
+
+    private IEnumerator DoSubmitScore()
+    {
+        // Submit highscore
+        string name = Regex.Replace(UiInputName.text, @"\s+", " "); // spaces
+        name = Regex.Replace(name, @"^\s+", ""); // no leading space
+        bool isFinished = false;
+        StartCoroutine(Database.SubmitHighscoreName(name, b => isFinished = b));
+
+        // Wait for finished
+        while (!isFinished)
+            yield return null;
+
+        // Gameover
+        showHighscoreFromGameover();
     }
 
     private void clearRemainingGameObjects()

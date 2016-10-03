@@ -315,10 +315,9 @@ public class PlayerController : Damageable {
         else
         {
             // inform the gameManager that the game is over
-            gameManager.gameover();
+            gameManager.StartCoroutine(gameManager.gameover());
 
-            // truly destroy
-            Destroy(gameObject);
+            // Then, wait for game manager to destroy it
         }
     }
 }

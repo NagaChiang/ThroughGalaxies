@@ -1,4 +1,5 @@
-/Assets/Done*
+App.config
+/packages/
 
 /[Ll]ibrary/
 /[Tt]emp/
