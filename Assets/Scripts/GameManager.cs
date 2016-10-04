@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour {
     [Header("Misc")]
     public CameraShaker Camera;
     public HerokuDatabase Database;
+    public AudioManager AudioManager;
 
     private GameObject _player;
     private Coroutine RoutineWaveSpawn;
@@ -68,7 +69,10 @@ public class GameManager : MonoBehaviour {
     {
         // let player press enter to start
         if (_enabledEnterRestart && Input.GetButtonDown("Submit"))
+        {
+            PlaySfxButtonClick();
             restart();
+        }
     }
 
     public void restart()
@@ -162,6 +166,11 @@ public class GameManager : MonoBehaviour {
         UiTextDisplay.gameObject.SetActive(false);
         UiGameover.SetActive(true);
         _enabledEnterRestart = true;
+    }
+
+    public void PlaySfxButtonClick()
+    {
+        AudioManager.PlaySfx(AudioManager.Clip_ButtonClick);
     }
 
     public IEnumerator gameover()

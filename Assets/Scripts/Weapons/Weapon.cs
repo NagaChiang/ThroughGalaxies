@@ -4,8 +4,8 @@ using System.Collections;
 // NOTE: Must instantiate a game object in the scene;
 // otherwise, it can not trace the position of the attached object.
 
-public abstract class Weapon : MonoBehaviour {
-
+public abstract class Weapon : SfxBase
+{
     public GameObject bullet;
     public float fireCooldown;
     public float FireDuration;

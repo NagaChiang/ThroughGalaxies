@@ -7,8 +7,9 @@ public enum BulletSource
     enemy,
 }
 
-public class Bullet : MonoBehaviour {
+public class Bullet : SfxBase {
 
+    [Header("Bullet")]
     public BulletSource bulletSource;
     public GameObject[] explosions;
     public float initialSpeed;
@@ -22,8 +23,11 @@ public class Bullet : MonoBehaviour {
     private const float _RAY_LENGTH = 50.0f;
     private LineRenderer _bulletPath;
 
-    void Start ()
+    protected override void Start ()
     {
+        // Sfx base
+        base.Start();
+
         // initial speed
         Rigidbody rigidbody = GetComponent<Rigidbody>();
         rigidbody.velocity = transform.forward * initialSpeed;

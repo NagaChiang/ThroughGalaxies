@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AreaOfEffect : MonoBehaviour {
-
+public class AreaOfEffect : SfxBase
+{
     public BulletSource bulletSource;
     public float duration;
     public float radius;
     public float damageInterval;
     public int damage;
 
-    void Start()
+    protected override void Start()
     {
+        // Sfx
+        base.Start();
+
         // apply area damage
         StartCoroutine(damageArea(transform.position, radius, damage, damageInterval, bulletSource));
 

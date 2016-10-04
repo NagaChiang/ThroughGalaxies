@@ -3,11 +3,18 @@ using System.Collections;
 
 public abstract class PlayerWeapon : Weapon {
 
+    [Header("Player Weapon")]
     public Vector3 sideFireOffset;
     public Color color;
 
     public int experience { get; set; }
     public int level { get; set; }
+
+    [Header("More Sfx")]
+    public AudioClip Clip_Upgrade;
+
+    [Header("VFX")]
+    public GameObject HaloUpgrade;
 
     private const int _MAX_LEVEL = 5;
 
@@ -43,6 +50,13 @@ public abstract class PlayerWeapon : Weapon {
                 // reach max level
                 if (isMaxLevel())
                     experience = getExpForLevel(_MAX_LEVEL);
+
+                // Sfx
+                Audio.PlaySfx(Clip_Upgrade);
+
+                // VFX
+                GameObject halo = Instantiate(HaloUpgrade, transform) as GameObject;
+                halo.transform.localPosition = Vector3.zero;
 
                 // return true to indicate updgrading
                 return true;

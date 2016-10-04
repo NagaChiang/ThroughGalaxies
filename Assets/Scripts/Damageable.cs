@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Damageable : MonoBehaviour {
+public abstract class Damageable : SfxBase {
 
     [Header("Damageable")]
     public int maxHealth;
@@ -23,8 +23,11 @@ public abstract class Damageable : MonoBehaviour {
     // blinking effect on hit
     private Shader _shaderNormal;
 
-    protected virtual void Start ()
+    protected override void Start ()
     {
+        // Sfx base
+        base.Start();
+
         // initial health
         health = maxHealth;
 

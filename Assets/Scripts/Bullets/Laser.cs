@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Laser : MonoBehaviour {
-
+public class Laser : SfxBase
+{
     [Header("Laser")]
     public BulletSource BulletSource;
     public bool isPiercing;
@@ -21,8 +21,11 @@ public class Laser : MonoBehaviour {
     private float NextDamageTime;
     private LineRenderer BulletPath;
 
-    void Start()
+    protected override void Start()
     {
+        // Sfx
+        base.Start();
+
         // Set time after delay
         StartTime = Time.time + StartDelay;
     }
