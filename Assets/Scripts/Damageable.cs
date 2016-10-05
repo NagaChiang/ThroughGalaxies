@@ -148,8 +148,11 @@ public abstract class Damageable : SfxBase {
     }
 
     // things to do once the health drop below 0
-    public virtual void destroy()
+    public override void destroy()
     {
+        // sfx
+        base.destroy();
+
         // explosion vfx
         Instantiate(vfxExplosion, transform.position, transform.rotation);
 

@@ -7,12 +7,15 @@ public class AudioManager : MonoBehaviour {
     public float BgmVolume;
     [Range(0.0f, 1.0f)]
     public float SfxVolume;
+    [Range(0.0f, 1.0f)]
+    public float SfxOneShotVolume;
     public AudioSource BgmSource;
     public AudioSource[] SfxSources;
 
     [Header("Audio Clips")]
     public AudioClip Clip_Bgm;
     public AudioClip Clip_ButtonClick;
+    public AudioClip Clip_GalaxyIntro;
 
 	public void PlayBgm(AudioClip clip)
     {
@@ -43,8 +46,7 @@ public class AudioManager : MonoBehaviour {
             if (index >= 0 && index < SfxSources.Length)
             {
                 AudioSource source = SfxSources[index];
-                source.volume = SfxVolume;
-                source.PlayOneShot(clip);
+                source.PlayOneShot(clip, SfxOneShotVolume);
             }
         }
 

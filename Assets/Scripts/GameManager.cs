@@ -63,6 +63,9 @@ public class GameManager : MonoBehaviour {
     {
         // show main menu
         showMainMenu();
+
+        // BGM
+        AudioManager.PlayBgm(AudioManager.Clip_Bgm);
     }
 
     void Update()
@@ -289,6 +292,9 @@ public class GameManager : MonoBehaviour {
             // for each galaxy
             foreach (Stage galaxy in galaxies)
             {
+                // Sfx: intro of galaxy
+                AudioManager.PlaySfx(AudioManager.Clip_GalaxyIntro);
+
                 // stage display start
                 UiTextDisplay.text = "Galaxy " + _stage.ToString();
                 UiTextDisplay.gameObject.SetActive(true);

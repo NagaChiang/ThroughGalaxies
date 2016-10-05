@@ -37,6 +37,9 @@ public class PlayerController : Damageable {
     public Limit boundaryX;
     public Limit boundaryZ;
 
+    [Header("Extra Sfx")]
+    public AudioClip Clip_Weapon_Switch;
+
     private HealthBar healthCircle;
     private WeaponBar weaponCircle;
     private PlayerWeapon _currentWeapon;
@@ -70,7 +73,7 @@ public class PlayerController : Damageable {
     void Update()
     {
         // fire the weapon
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButton("Fire1") && health > 0)
             _currentWeapon.fire();
 
         // End of laser
@@ -133,7 +136,14 @@ public class PlayerController : Damageable {
 
             // update UI
             if (isUpgraded)
+            {
                 weaponCircle.switchWeapon(_currentWeapon);
+
+                // Show popup text
+                PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
+                if (popupManager)
+                    popupManager.showMessage("LEVEL UP", transform.position);
+            }
             else
                 weaponCircle.update(_currentWeapon);
         }
@@ -208,10 +218,16 @@ public class PlayerController : Damageable {
 
     private void loadWeapon(PlayerWeapon weapon)
     {
+        // Global cooldown
+        if(_currentWeapon && _currentWeapon != weapon)
+            _currentWeapon.NextFire = Time.time + WeaponGlobalCooldown;
+
+        // Change weapon
         _currentWeapon = weapon;
 
-        // Global cooldown
-        _currentWeapon.NextFire = Time.time + WeaponGlobalCooldown;
+        // Sfx
+        if (Clip_Weapon_Switch)
+            Audio.PlaySfx(Clip_Weapon_Switch);
 
         // update UI
         weaponCircle.switchWeapon(weapon);

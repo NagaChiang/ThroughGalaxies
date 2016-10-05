@@ -16,7 +16,7 @@ public abstract class SfxBase : MonoBehaviour {
         // Get audio manager
         GameManager gameMgr = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         Audio = gameMgr.AudioManager;
-
+            
         // Play sfx on start
         if (Clip_OnStart)
             Audio.PlaySfx(Clip_OnStart);
@@ -31,7 +31,10 @@ public abstract class SfxBase : MonoBehaviour {
         // Stop looping sfx
         if (Clip_Loop)
             Audio.StopAudioSource(AudioSourceLoopIndex);
+    }
 
+    public virtual void destroy()
+    {
         // Play onDestroy sfx
         if (Clip_OnDestroy)
             Audio.PlaySfx(Clip_OnDestroy);

@@ -16,6 +16,15 @@ public class Laser : SfxBase
     public ParticleSystem LaserBurn;
     public LineRenderer LineBulletPath;
 
+    [Header("Extra Sfx")]
+    public AudioClip Clip_Charge;
+    public AudioClip Clip_Firing;
+    public AudioClip Clip_Burn;
+
+    private int AudioSourceFiringIndex;
+    private int AudioSourceBurnIndex;
+    private const int NOT_LOOPING_INDEX = -10;
+
     private const float _RAY_LENGTH = 50.0f;
     private float StartTime;
     private float NextDamageTime;
@@ -25,9 +34,15 @@ public class Laser : SfxBase
     {
         // Sfx
         base.Start();
+        AudioSourceFiringIndex = NOT_LOOPING_INDEX;
+        AudioSourceBurnIndex = NOT_LOOPING_INDEX;
 
         // Set time after delay
         StartTime = Time.time + StartDelay;
+
+        // Sfx charge
+        if (Clip_Charge)
+            Audio.PlaySfx(Clip_Charge);
     }
 
     void Update()
@@ -41,6 +56,12 @@ public class Laser : SfxBase
 
             // Update VFX of laser
             RaycastHit hitInfo = UpdateVFXPosition(Width, _RAY_LENGTH, LineLaser, LaserBurn);
+
+            // Sfx firing
+            if (Clip_Firing && AudioSourceFiringIndex == NOT_LOOPING_INDEX)
+            {
+                AudioSourceFiringIndex = Audio.PlaySfx(Clip_Firing, true);
+            }
 
             // Apply damage to targets
             Vector3 boxCenter;
@@ -65,6 +86,25 @@ public class Laser : SfxBase
         {
             // Update bullet path
             UpdateBulletPath(_RAY_LENGTH, LineBulletPath);
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        // End the sfx of burning
+        if (Clip_Burn && AudioSourceBurnIndex != NOT_LOOPING_INDEX)
+        {
+            Audio.StopAudioSource(AudioSourceBurnIndex);
+            AudioSourceBurnIndex = NOT_LOOPING_INDEX;
+        }
+
+        // End sfx of firing
+        if (Clip_Burn && AudioSourceFiringIndex != NOT_LOOPING_INDEX)
+        {
+            Audio.StopAudioSource(AudioSourceFiringIndex);
+            AudioSourceFiringIndex = NOT_LOOPING_INDEX;
         }
     }
 
@@ -114,6 +154,7 @@ public class Laser : SfxBase
         // Damage
         if (Time.time >= NextDamageTime)
         {
+            bool hasHit = false;
             ArrayList damagedObjIDs = new ArrayList();
             Collider[] colliders = Physics.OverlapBox(boxCenter, new Vector3(width / 2.0f, 0.0f, totalLength / 2.0f), transform.rotation);
             foreach (Collider collider in colliders)
@@ -163,9 +204,23 @@ public class Laser : SfxBase
                     Damageable target = collider.GetComponent<Damageable>();
                     if (target != null)
                     {
+                        hasHit = true;
                         target.applyDamage((int)(DamagePerSecond * DamageInterval));
                     }
+
+                    // Sfx of burning
+                    if(Clip_Burn && AudioSourceBurnIndex == NOT_LOOPING_INDEX)
+                    {
+                        AudioSourceBurnIndex = Audio.PlaySfx(Clip_Burn, true);
+                    }
                 }
+            }
+
+            // End the sfx of burning
+            if(!hasHit && Clip_Burn && AudioSourceBurnIndex != NOT_LOOPING_INDEX)
+            {
+                Audio.StopAudioSource(AudioSourceBurnIndex);
+                AudioSourceBurnIndex = NOT_LOOPING_INDEX;
             }
 
             // Update next damage time

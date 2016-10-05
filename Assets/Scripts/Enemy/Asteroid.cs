@@ -30,8 +30,8 @@ public class Asteroid : Damageable {
 
     void OnTriggerEnter(Collider other)
     {
-        // hit player or enemy
-        if(other.tag == "Player" || other.tag == "Enemy")
+        // hit player
+        if(other.tag == "Player")
         {
             // apply damage depending on remaining health
             Damageable target = other.GetComponent<Damageable>();
