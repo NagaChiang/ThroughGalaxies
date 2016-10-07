@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Powerup : MonoBehaviour {
+public abstract class Powerup : SfxBase {
 
     public float verticalSpeed;
     public float rotateFactor;
@@ -12,8 +12,11 @@ public abstract class Powerup : MonoBehaviour {
 
     private bool isLooted;
 
-    void Start()
+    protected override void Start()
     {
+        // Sfx base
+        base.Start();
+
         // random speed
         Rigidbody rigidbody = GetComponent<Rigidbody>();
         rigidbody.velocity = new Vector3(0.0f, 0.0f, -verticalSpeed);
@@ -46,6 +49,7 @@ public abstract class Powerup : MonoBehaviour {
             doPowerup(other.gameObject.GetComponent<PlayerController>());
 
             // destroy
+            destroy();
             Destroy(gameObject);
         }
     }

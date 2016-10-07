@@ -258,6 +258,10 @@ public class PlayerController : Damageable {
         // explosion vfx
         Instantiate(vfxExplosion, transform.position, transform.rotation);
 
+        // Sfx
+        if (Clip_OnDestroy)
+            Audio.PlaySfx(Clip_OnDestroy);
+
         // drop experience as penalty
         if (!_currentWeapon.isMaxLevel())
         {

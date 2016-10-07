@@ -18,12 +18,14 @@ public class Laser : SfxBase
 
     [Header("Extra Sfx")]
     public AudioClip Clip_Charge;
+    public AudioClip Clip_Fire;
     public AudioClip Clip_Firing;
     public AudioClip Clip_Burn;
 
     private int AudioSourceFiringIndex;
     private int AudioSourceBurnIndex;
     private const int NOT_LOOPING_INDEX = -10;
+    private bool HasFired;
 
     private const float _RAY_LENGTH = 50.0f;
     private float StartTime;
@@ -56,6 +58,13 @@ public class Laser : SfxBase
 
             // Update VFX of laser
             RaycastHit hitInfo = UpdateVFXPosition(Width, _RAY_LENGTH, LineLaser, LaserBurn);
+
+            // Sfx fire
+            if(Clip_Fire && !HasFired)
+            {
+                Audio.PlaySfx(Clip_Fire);
+                HasFired = true;
+            }
 
             // Sfx firing
             if (Clip_Firing && AudioSourceFiringIndex == NOT_LOOPING_INDEX)

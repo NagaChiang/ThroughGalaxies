@@ -39,11 +39,8 @@ public abstract class Boss : Enemy {
         base.FixedUpdate();
 
         // FSM
-        if (Player)
-        {
-            Fsm.CurrentState.Reason(Player, gameObject);
-            Fsm.CurrentState.Act(Player, gameObject);
-        }
+        Fsm.CurrentState.Reason(Player, gameObject);
+        Fsm.CurrentState.Act(Player, gameObject);
     }
 
     public override void applyDamage(int damage)

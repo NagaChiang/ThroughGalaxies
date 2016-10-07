@@ -57,7 +57,11 @@ public class AudioManager : MonoBehaviour {
 
     public void StopAudioSource(int index)
     {
-        SfxSources[index].Stop();
+        if (index >= 0 && index < SfxSources.Length)
+        {
+            if(SfxSources[index])
+                SfxSources[index].Stop();
+        }
     }
 
     private int GetIdleSfxSourceIndex()

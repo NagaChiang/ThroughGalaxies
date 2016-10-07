@@ -19,13 +19,9 @@ public class Bullet : SfxBase {
     public int damage;
     public LineRenderer lineBulletPath;
 
-    [Header("More Sfx")]
-    public AudioClip Clip_Accelerate;
-
     private float _startTime;
     private const float _RAY_LENGTH = 50.0f;
     private LineRenderer _bulletPath;
-    private bool hasAccelerated;
 
     protected override void Start ()
     {
@@ -59,14 +55,6 @@ public class Bullet : SfxBase {
             Rigidbody rigidbody = GetComponent<Rigidbody>();
             acceleration += accAcceleration;
             rigidbody.velocity += transform.forward * acceleration;
-
-            // Sfx
-            if (!hasAccelerated)
-            {
-                if (Clip_Accelerate)
-                    Audio.PlaySfx(Clip_Accelerate);
-                hasAccelerated = true;
-            }
         }
 
         // update bullet path

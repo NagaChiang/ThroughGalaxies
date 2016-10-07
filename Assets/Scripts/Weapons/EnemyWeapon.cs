@@ -16,6 +16,10 @@ public class EnemyWeapon : Weapon {
     {
         for (int i = 0; i < shotPerFire; i++)
         {
+            // SFX for more than one shot
+            if(Clip_Fire && i > 0)
+                Audio.PlaySfx(Clip_Fire);
+
             if (bulletPerShot <= 1 || shotAngleRange == 0)
             {
                 // straight shot
