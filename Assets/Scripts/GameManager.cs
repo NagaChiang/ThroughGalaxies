@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour {
     public InputField UiInputName;
     public Text UiTextDisplay;
     public GameObject UiBossStatus;
+    public GameObject UiPause;
 
     [Header("Misc")]
     public CameraShaker Camera;
@@ -58,6 +59,9 @@ public class GameManager : MonoBehaviour {
     private int _stage;
     private bool _enabledEnterRestart;
     private int _remainingLife;
+
+    private bool isPaused;
+    private bool EnabledPause;
 
     void Start ()
     {
@@ -76,12 +80,42 @@ public class GameManager : MonoBehaviour {
             PlaySfxButtonClick();
             restart();
         }
+
+        // Toggle pause
+        if(EnabledPause && Input.GetButtonDown("Pause"))
+        {
+            Time.timeScale = Time.timeScale == 1 ? 0.0f : 1.0f;
+            
+            if(Time.timeScale == 1)
+            {
+                // Hide pause UI
+                UiPause.SetActive(false);
+            }
+            else if(Time.timeScale == 0)
+            {
+                // Show pause UI
+                UiPause.SetActive(true);
+            }
+        }
+
+        // Submit highscore
+        if(UiInputName.enabled
+            && UiInputName.text != ""
+            && Input.GetButtonDown("Submit"))
+        {
+            // Submit
+            SubmitHighscore();
+            PlaySfxButtonClick();
+        }
     }
 
     public void restart()
     {
         // disable enter
         _enabledEnterRestart = false;
+
+        // Enable pause
+        EnabledPause = true;
 
         // clear previous remains
         clearRemainingGameObjects();
@@ -178,6 +212,9 @@ public class GameManager : MonoBehaviour {
 
     public IEnumerator gameover()
     {
+        // Disable pause
+        EnabledPause = false;
+
         // Prepare player data
         PlayerController playerController = _player.GetComponent<PlayerController>();
         PlayerData data;
