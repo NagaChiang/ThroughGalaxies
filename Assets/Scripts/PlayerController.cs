@@ -220,7 +220,7 @@ public class PlayerController : Damageable {
     {
         // Global cooldown
         if(_currentWeapon && _currentWeapon != weapon)
-            _currentWeapon.NextFire = Time.time + WeaponGlobalCooldown;
+            weapon.NextFire = Time.time + WeaponGlobalCooldown;
 
         // Change weapon
         _currentWeapon = weapon;

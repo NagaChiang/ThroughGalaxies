@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Through Galaxies</title>
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <link rel="shortcut icon" href="TemplateData/favicon.ico" />
-    <script src="TemplateData/UnityProgress.js"></script>
+    <link rel="stylesheet" href="Build/TemplateData/style.css">
+    <link rel="shortcut icon" href="Build/TemplateData/favicon.ico" />
+    <script src="Build/TemplateData/UnityProgress.js"></script>
   </head>
   <body class="template">
     <p class="header"><span>Unity WebGL Player | </span>Through Galaxies</p>
@@ -14,7 +14,7 @@
       <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="900px" width="600px"></canvas>
       <br>
       <div class="logo"></div>
-      <div class="fullscreen"><img src="TemplateData/fullscreen.png" width="38" height="38" alt="Fullscreen" title="Fullscreen" onclick="SetFullscreen(1);" /></div>
+      <div class="fullscreen"><img src="Build/TemplateData/fullscreen.png" width="38" height="38" alt="Fullscreen" title="Fullscreen" onclick="SetFullscreen(1);" /></div>
       <div class="title">Through Galaxies</div>
     </div>
     <p class="footer">&laquo; created with <a href="http://unity3d.com/" title="Go to unity3d.com">Unity</a> &raquo;</p>
@@ -23,13 +23,13 @@
     TOTAL_MEMORY: 268435456,
     errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
     compatibilitycheck: null,
-    dataUrl: "Release/Build.data",
-    codeUrl: "Release/Build.js",
-    memUrl: "Release/Build.mem",
+    dataUrl: "Build/Release/Build.data",
+    codeUrl: "Build/Release/Build.js",
+    memUrl: "Build/Release/Build.mem",
     
   };
 </script>
-<script src="Release/UnityLoader.js"></script>
+<script src="Build/Release/UnityLoader.js"></script>
 
   </body>
 </html>
