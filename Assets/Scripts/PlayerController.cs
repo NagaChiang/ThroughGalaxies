@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using CnControls;
 
 [System.Serializable]
 public struct Limit
@@ -40,6 +41,7 @@ public class PlayerController : Damageable {
     [Header("Extra Sfx")]
     public AudioClip Clip_Weapon_Switch;
 
+    private GameManager GameMgr;
     private HealthBar healthCircle;
     private WeaponBar weaponCircle;
     private PlayerWeapon _currentWeapon;
@@ -48,6 +50,9 @@ public class PlayerController : Damageable {
 
     protected override void Start()
     {
+        // Get GameManager
+        GameMgr = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
         // get HUDs
         healthCircle = GameObject.Find("HealthCircle").GetComponent<HealthBar>();
         weaponCircle = GameObject.Find("WeaponCircle").GetComponent<WeaponBar>();
@@ -73,8 +78,17 @@ public class PlayerController : Damageable {
     void Update()
     {
         // fire the weapon
-        if (Input.GetButton("Fire1") && health > 0)
+        if (GameMgr.IsMobile)
+        {
+            // For mobiles
             _currentWeapon.fire();
+        }
+        else
+        {
+            // For Windows
+            if (Input.GetButton("Fire1") && health > 0)
+                _currentWeapon.fire();
+        }
 
         // End of laser
         if (_currentWeapon == weapons.Laser)
@@ -86,17 +100,11 @@ public class PlayerController : Damageable {
             }
         }
 
-        // handle weapon switching
-        handleWeaponSelect();
-    }
-
-	protected override void FixedUpdate()
-    {
-        // Damageable
-        base.FixedUpdate();
-
         // handle the movements
         move();
+
+        // handle weapon switching
+        handleWeaponSelect();
     }
 
     // add functions to update the UI of health
@@ -172,8 +180,21 @@ public class PlayerController : Damageable {
     {
         Rigidbody rigidbody = GetComponent<Rigidbody>();
 
-        float axisHorizontal = Input.GetAxis("Horizontal");
-        float axisVertical = Input.GetAxis("Vertical");
+        // Get input
+        float axisHorizontal;
+        float axisVertical;
+        if (GameMgr.IsMobile)
+        {
+            // For mobiles
+            axisHorizontal = CnInputManager.GetAxis("Horizontal");
+            axisVertical = CnInputManager.GetAxis("Vertical");
+        }
+        else
+        {
+            // Windows
+            axisHorizontal = Input.GetAxis("Horizontal");
+            axisVertical = Input.GetAxis("Vertical");
+        }
 
         // update velocity
         Vector3 movement = new Vector3(axisHorizontal, 0.0f, axisVertical);
@@ -196,7 +217,8 @@ public class PlayerController : Damageable {
     // handle the buttons to select weapon
     private void handleWeaponSelect()
     {
-        if (Input.GetButtonDown("Weapon1"))
+        if (Input.GetButtonDown("Weapon1")
+            || CnInputManager.GetButtonDown("Weapon1"))
         {
             loadWeapon(weapons.Bolt);
 
@@ -204,7 +226,8 @@ public class PlayerController : Damageable {
             ((LaserWeapon)weapons.Laser).endFire();
         }
 
-        else if (Input.GetButtonDown("Weapon2"))
+        else if (Input.GetButtonDown("Weapon2")
+            || CnInputManager.GetButtonDown("Weapon2"))
         {
             loadWeapon(weapons.Sphere);
 
@@ -212,8 +235,11 @@ public class PlayerController : Damageable {
             ((LaserWeapon)weapons.Laser).endFire();
         }
 
-        else if (Input.GetButtonDown("Weapon3"))
+        else if (Input.GetButtonDown("Weapon3")
+            || CnInputManager.GetButtonDown("Weapon3"))
+        {
             loadWeapon(weapons.Laser);
+        }
     }
 
     private void loadWeapon(PlayerWeapon weapon)
@@ -270,14 +296,13 @@ public class PlayerController : Damageable {
             expDrop = (int)(expDrop * proportionExpDrop);
             weaponCircle.update(_currentWeapon);
 
-            GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-            if (gameManager == null)
+            if (GameMgr == null)
                 Debug.LogError("Can't find the GameManager.");
             else
             {
                 Vector3 pos = transform.position;
                 float radius = GetComponent<Collider>().bounds.extents.x + extendRangeExpDrop;
-                gameManager.dropExperience(pos, radius, expDrop);
+                GameMgr.dropExperience(pos, radius, expDrop);
             }
 
             // Show popup text for experience dropped

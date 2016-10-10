@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using UnityEngine.Events;
 
 [System.Serializable]
 public struct Stage
@@ -46,14 +45,21 @@ public class GameManager : MonoBehaviour {
     public Text UiTextDisplay;
     public GameObject UiBossStatus;
     public GameObject UiPause;
+    public GameObject UiTutorialButton;
+    public GameObject UiVirtualController;
+    public GameObject UiMenuEnterTip;
+    public GameObject UiGameoverEnterTip;
 
     [Header("Misc")]
     public CameraShaker Camera;
     public HerokuDatabase Database;
     public AudioManager AudioManager;
 
+    public bool IsMobile { get; private set; }
+
     private GameObject _player;
     private Coroutine RoutineWaveSpawn;
+    private bool IsGameover;
     private int _score;
     private float _difficultyFactor;
     private int _stage;
@@ -65,6 +71,15 @@ public class GameManager : MonoBehaviour {
 
     void Start ()
     {
+        // For mobile
+#if UNITY_ANDROID || UNITY_IOS
+        IsMobile = true;
+        UiTutorialButton.SetActive(false);
+        UiVirtualController.SetActive(true);
+        UiMenuEnterTip.SetActive(false);
+        UiGameoverEnterTip.SetActive(false);
+#endif
+
         // show main menu
         showMainMenu();
 
@@ -131,6 +146,7 @@ public class GameManager : MonoBehaviour {
             StopCoroutine(RoutineWaveSpawn);
 
         // initial properties
+        IsGameover = false;
         _score = 0;
         _difficultyFactor = 1.0f;
         _stage = 1;
@@ -212,6 +228,8 @@ public class GameManager : MonoBehaviour {
 
     public IEnumerator gameover()
     {
+        IsGameover = true;
+
         // Disable pause
         EnabledPause = false;
 
@@ -255,11 +273,14 @@ public class GameManager : MonoBehaviour {
 
     public void addScore(int num)
     {
-        // add to total score (with difficulty bonus)
-        _score += (int)(num * _difficultyFactor);
+        if (!IsGameover)
+        {
+            // add to total score (with difficulty bonus)
+            _score += (int)(num * _difficultyFactor);
 
-        // update score UI
-        updateScoreUI(_score);
+            // update score UI
+            updateScoreUI(_score);
+        }
     }
 
     public void dropExperience(Vector3 center, float radius, int exp)
