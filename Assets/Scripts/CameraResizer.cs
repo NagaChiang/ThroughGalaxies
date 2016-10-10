@@ -3,7 +3,8 @@ using System.Collections;
 
 public class CameraResizer : MonoBehaviour {
 
-    public float DefaultAspect;
+    public float DefaultHeight;
+    public float DefaultWidth;
     public Camera MainCamera;
 
     private bool IsFullScreen = false;
@@ -24,14 +25,26 @@ public class CameraResizer : MonoBehaviour {
         }
     }
 
-    private void OnResize(Rect newAspectRect)
+    private void OnResize(Rect windowRect)
     {
-        // Set width depending on height
-        Rect resizedRect = new Rect(newAspectRect);
-        resizedRect.width = resizedRect.height * DefaultAspect;
+        // Resize
+        float hToWDefault = DefaultHeight / DefaultWidth;
+        float hToWWindow = windowRect.height / windowRect.width;
+        Rect resizedRect = new Rect(windowRect);
+        if(hToWWindow >= hToWDefault)
+        {
+            // Width too short
+            resizedRect.height = resizedRect.width * hToWDefault;
+        }
+        else
+        {
+            // Height too short
+            resizedRect.width = resizedRect.height / hToWDefault;
+        }
 
         // Center the viewport
         resizedRect.x = (Screen.width / 2) - (resizedRect.width / 2);
+        resizedRect.y = (Screen.height / 2) - (resizedRect.height / 2);
 
         // Assign and record aspect rect
         MainCamera.pixelRect = resizedRect;
