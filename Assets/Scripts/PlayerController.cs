@@ -60,16 +60,19 @@ public class PlayerController : Damageable {
             Debug.LogError("Can not find the health bar.");
         if (weaponCircle == null)
             Debug.LogError("Can not find the weapon bar.");
-
+        
         // from Damageable
         base.Start();
 
         // initial properties
         _remainingLife = initialLife;
         _isImmune = false;
-        loadWeapon(weapons.Bolt);
         healthCircle.update(maxHealth, maxHealth);
         healthCircle.updateLife(_remainingLife);
+
+        // Load weapon
+        _currentWeapon = weapons.Bolt;
+        weaponCircle.switchWeapon(_currentWeapon);
 
         // immunity on respawn
         StartCoroutine(immuneOnRespawn(immuneDuration, immuneBlinkInterval));

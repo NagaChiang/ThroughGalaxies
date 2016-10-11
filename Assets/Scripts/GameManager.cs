@@ -49,6 +49,9 @@ public class GameManager : MonoBehaviour {
     public GameObject UiVirtualController;
     public GameObject UiMenuEnterTip;
     public GameObject UiGameoverEnterTip;
+    public GameObject UiMenuQuitButton;
+    public GameObject UiPauseQuitButton;
+    public GameObject UiGameoverQuitButton;
 
     [Header("Misc")]
     public CameraShaker Camera;
@@ -78,6 +81,9 @@ public class GameManager : MonoBehaviour {
         UiVirtualController.SetActive(true);
         UiMenuEnterTip.SetActive(false);
         UiGameoverEnterTip.SetActive(false);
+        UiMenuQuitButton.SetActive(true);
+        UiPauseQuitButton.SetActive(true);
+        UiGameoverQuitButton.SetActive(true);
 #endif
 
         // show main menu
@@ -89,6 +95,8 @@ public class GameManager : MonoBehaviour {
 
     void Update()
     {
+        // Quit on menu or gameover
+
         // let player press enter to start
         if (_enabledEnterRestart && Input.GetButtonDown("Submit"))
         {
@@ -97,20 +105,9 @@ public class GameManager : MonoBehaviour {
         }
 
         // Toggle pause
-        if(EnabledPause && Input.GetButtonDown("Pause"))
+        if(EnabledPause && (Input.GetButtonDown("Pause") || Input.GetButtonDown("Cancel")))
         {
-            Time.timeScale = Time.timeScale == 1 ? 0.0f : 1.0f;
-            
-            if(Time.timeScale == 1)
-            {
-                // Hide pause UI
-                UiPause.SetActive(false);
-            }
-            else if(Time.timeScale == 0)
-            {
-                // Show pause UI
-                UiPause.SetActive(true);
-            }
+            TogglePause();
         }
 
         // Submit highscore
@@ -262,6 +259,11 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     public void SubmitHighscore()
     {
         // Diable submit highscore UI
@@ -407,6 +409,22 @@ public class GameManager : MonoBehaviour {
 
             // Raise the difficulty
             _difficultyFactor += 1.0f;
+        }
+    }
+
+    private void TogglePause()
+    {
+        Time.timeScale = Time.timeScale == 1 ? 0.0f : 1.0f;
+
+        if (Time.timeScale == 1)
+        {
+            // Hide pause UI
+            UiPause.SetActive(false);
+        }
+        else if (Time.timeScale == 0)
+        {
+            // Show pause UI
+            UiPause.SetActive(true);
         }
     }
 
