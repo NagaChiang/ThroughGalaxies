@@ -80,6 +80,10 @@ public abstract class Boss : Enemy {
         // Disable UI
         UI_BossStatus.SetActive(false);
 
+        // Slow motion
+        GameManager gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        gameManager.StartCoroutine(SlowMotion(0.25f, 0.5f));
+
         // Base
         base.destroy();
     }
@@ -112,6 +116,13 @@ public abstract class Boss : Enemy {
         {
             Debug.LogError("Can't find the UI for this boss.");
         }
+    }
+
+    private IEnumerator SlowMotion(float speed, float duration)
+    {
+        Time.timeScale = speed;
+        yield return new WaitForSeconds(duration);
+        Time.timeScale = 1.0f;
     }
 
     protected abstract void InitializeFSM();

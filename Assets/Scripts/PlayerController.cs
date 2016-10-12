@@ -258,6 +258,12 @@ public class PlayerController : Damageable {
         if (Clip_Weapon_Switch)
             Audio.PlaySfx(Clip_Weapon_Switch);
 
+#if UNITY_ANDROID || UNITY_IOS
+        // Vibration
+        if (GameMgr.IsMobile)
+            Handheld.Vibrate();
+#endif
+
         // update UI
         weaponCircle.switchWeapon(weapon);
     }

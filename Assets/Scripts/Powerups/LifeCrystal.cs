@@ -12,7 +12,7 @@ public class LifeCrystal : Powerup {
         // show popup text
         PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
         if (popupManager)
-            popupManager.showMessage("+" + life + " LIFE", transform.position);
+            popupManager.showMessage("+" + life + " LIFE", player.transform.position);
         else
             Debug.LogError("Can't find the PopupTextManager.");
     }

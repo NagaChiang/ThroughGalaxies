@@ -414,7 +414,7 @@ public class GameManager : MonoBehaviour {
 
     private void TogglePause()
     {
-        Time.timeScale = Time.timeScale == 1 ? 0.0f : 1.0f;
+        Time.timeScale = Time.timeScale > 0 ? 0.0f : 1.0f;
 
         if (Time.timeScale == 1)
         {
