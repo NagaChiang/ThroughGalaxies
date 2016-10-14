@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using CnControls;
+using UnityEngine.Advertisements;
 
 [System.Serializable]
 public struct Limit
@@ -47,6 +48,7 @@ public class PlayerController : Damageable {
     private PlayerWeapon _currentWeapon;
     private int _remainingLife;
     private bool _isImmune;
+    public bool HasAd; // Unity Ads
 
     protected override void Start()
     {
@@ -67,6 +69,7 @@ public class PlayerController : Damageable {
         // initial properties
         _remainingLife = initialLife;
         _isImmune = false;
+        HasAd = false;
         healthCircle.update(maxHealth, maxHealth);
         healthCircle.updateLife(_remainingLife);
 
@@ -108,6 +111,11 @@ public class PlayerController : Damageable {
 
         // handle weapon switching
         handleWeaponSelect();
+    }
+
+    public void DoRespawn()
+    {
+        StartCoroutine(respawn());
     }
 
     // add functions to update the UI of health
@@ -258,12 +266,6 @@ public class PlayerController : Damageable {
         if (Clip_Weapon_Switch)
             Audio.PlaySfx(Clip_Weapon_Switch);
 
-#if UNITY_ANDROID || UNITY_IOS
-        // Vibration
-        if (GameMgr.IsMobile)
-            Handheld.Vibrate();
-#endif
-
         // update UI
         weaponCircle.switchWeapon(weapon);
     }
@@ -370,8 +372,18 @@ public class PlayerController : Damageable {
             StartCoroutine(respawn());
         else
         {
-            // inform the gameManager that the game is over
-            gameManager.StartCoroutine(gameManager.gameover());
+            if (gameManager.IsMobile && !HasAd
+                && Advertisement.isInitialized && Advertisement.IsReady())
+            {
+                // Unity Ads
+                HasAd = true;
+                gameManager.PromptForExtraLife();
+            }
+            else
+            {
+                // inform the gameManager that the game is over
+                gameManager.DoGameover();
+            }
 
             // Then, wait for game manager to destroy it
         }

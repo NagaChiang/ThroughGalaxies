@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Advertisements;
+using System;
 
 public class UnityAdDisplayer : MonoBehaviour {
 
     public string GameID;
     public bool EnabledTestMode;
-
-    public delegate void ResultCallBack(ShowResult result);
-    public ResultCallBack Callback;
 
     void Start()
     {
@@ -18,21 +16,13 @@ public class UnityAdDisplayer : MonoBehaviour {
         }
     }
 
-	public void ShowAd()
+	public void ShowAd(Action<ShowResult> callback)
     {
-
-    }
-
-    private IEnumerator DoShowAd()
-    {
-        // Wait for the advertisement ready
-        while (!Advertisement.isInitialized || !Advertisement.IsReady())
-        {
-            yield return new WaitForSeconds(0.5f);
-        }
-
         // Ad options
         ShowOptions options = new ShowOptions();
-        //options.resultCallback = Callback;
+        options.resultCallback = callback;
+
+        // Show
+        Advertisement.Show(options);
     }
 }

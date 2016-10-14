@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UnityEngine.Advertisements;
 
 [System.Serializable]
 public struct Stage
@@ -52,11 +53,13 @@ public class GameManager : MonoBehaviour {
     public GameObject UiMenuQuitButton;
     public GameObject UiPauseQuitButton;
     public GameObject UiGameoverQuitButton;
+    public GameObject UiExtraLife;
 
     [Header("Misc")]
     public CameraShaker Camera;
     public HerokuDatabase Database;
     public AudioManager AudioManager;
+    public UnityAdDisplayer AdDisplayer;
 
     public bool IsMobile { get; private set; }
 
@@ -170,6 +173,9 @@ public class GameManager : MonoBehaviour {
     }
     public void showHowToPlay()
     {
+        // Disable enter
+        _enabledEnterRestart = false;
+
         // enable how to play
         UiMenu.SetActive(false);
         UiHowToPlay.SetActive(true);
@@ -177,6 +183,9 @@ public class GameManager : MonoBehaviour {
 
     public void showHighscoreFromMainmenu()
     {
+        // Disable enter
+        _enabledEnterRestart = false;
+
         // Enable ui
         UiMenu.SetActive(false);
         UiHighscoreFromMenu.SetActive(true);
@@ -191,6 +200,9 @@ public class GameManager : MonoBehaviour {
 
     public void showHighscoreFromGameover()
     {
+        // Disable enter
+        _enabledEnterRestart = false;
+
         // Enable ui
         UiGameover.SetActive(false);
         UiHighscoreFromGameover.SetActive(true);
@@ -225,10 +237,17 @@ public class GameManager : MonoBehaviour {
 
     public IEnumerator gameover()
     {
+        // Set flag
         IsGameover = true;
 
         // Disable pause
         EnabledPause = false;
+
+        // Disable Ad prompt
+        UiExtraLife.SetActive(false);
+
+        // Unfreeze time
+        Time.timeScale = 1.0f;
 
         // Prepare player data
         PlayerController playerController = _player.GetComponent<PlayerController>();
@@ -264,6 +283,42 @@ public class GameManager : MonoBehaviour {
         Application.Quit();
     }
 
+    public void PromptForExtraLife()
+    {
+        // Freeze time
+        Time.timeScale = 0.0f;
+
+        // Show UI
+        UiExtraLife.SetActive(true);
+    }
+
+    public void ShowAds()
+    {
+        // Disable Ad prompt
+        UiExtraLife.SetActive(false);
+
+        AdDisplayer.ShowAd(HandleAdResult);
+    }
+
+    public void HandleAdResult(ShowResult result)
+    {
+        // Handle results
+        switch (result)
+        {
+            case ShowResult.Finished:
+                Time.timeScale = 1.0f;
+                _player.GetComponent<PlayerController>().addLife(1);
+                _player.GetComponent<PlayerController>().DoRespawn();
+                break;
+            case ShowResult.Skipped:
+                DoGameover();
+                break;
+            case ShowResult.Failed:
+                DoGameover();
+                break;
+        }
+    }
+
     public void SubmitHighscore()
     {
         // Diable submit highscore UI
@@ -271,6 +326,11 @@ public class GameManager : MonoBehaviour {
 
         // Start coroutine to submit
         StartCoroutine(DoSubmitScore());
+    }
+
+    public void DoGameover()
+    {
+        StartCoroutine(gameover());
     }
 
     public void addScore(int num)
@@ -363,7 +423,7 @@ public class GameManager : MonoBehaviour {
                 // stage display end
                 yield return new WaitForSeconds(stageInterval);
                 UiTextDisplay.gameObject.SetActive(false);
-                BgScroller.isBoostEnabled = false;
+                BgScroller.isBoostEnabled = false;                
 
                 // spawn waves one by one
                 foreach (Wave wave in galaxy.waves)
