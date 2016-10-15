@@ -48,8 +48,6 @@ public class GameManager : MonoBehaviour {
     public GameObject UiPause;
     public GameObject UiTutorialButton;
     public GameObject UiVirtualController;
-    public GameObject UiMenuEnterTip;
-    public GameObject UiGameoverEnterTip;
     public GameObject UiMenuQuitButton;
     public GameObject UiPauseQuitButton;
     public GameObject UiGameoverQuitButton;
@@ -82,8 +80,6 @@ public class GameManager : MonoBehaviour {
         IsMobile = true;
         UiTutorialButton.SetActive(false);
         UiVirtualController.SetActive(true);
-        UiMenuEnterTip.SetActive(false);
-        UiGameoverEnterTip.SetActive(false);
         UiMenuQuitButton.SetActive(true);
         UiPauseQuitButton.SetActive(true);
         UiGameoverQuitButton.SetActive(true);
@@ -309,6 +305,7 @@ public class GameManager : MonoBehaviour {
                 Time.timeScale = 1.0f;
                 _player.GetComponent<PlayerController>().addLife(1);
                 _player.GetComponent<PlayerController>().DoRespawn();
+                TogglePause();
                 break;
             case ShowResult.Skipped:
                 DoGameover();

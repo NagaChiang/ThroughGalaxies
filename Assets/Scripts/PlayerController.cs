@@ -319,7 +319,7 @@ public class PlayerController : Damageable {
             // Show popup text for experience dropped
             PopupTextManager popupManager = GameObject.FindWithTag("PopupTextManager").GetComponent<PopupTextManager>();
             if (popupManager)
-                popupManager.showMessage("-" + (proportionExpDrop * 100).ToString() + "% EXP", transform.position);
+                popupManager.showMessage("LOSE " + (proportionExpDrop * 100).ToString() + "% EXP", transform.position);
             else
                 Debug.LogError("Can't find the PopupTextManager.");
         }
