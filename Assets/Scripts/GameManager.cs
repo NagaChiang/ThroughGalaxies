@@ -501,6 +501,7 @@ public class GameManager : MonoBehaviour {
         // Submit highscore
         string name = Regex.Replace(UiInputName.text, @"\s+", " "); // spaces
         name = Regex.Replace(name, @"^\s+", ""); // no leading space
+        name = Regex.Replace(name, "-", ""); // no -
         bool isFinished = false;
 
         if (name != "")
