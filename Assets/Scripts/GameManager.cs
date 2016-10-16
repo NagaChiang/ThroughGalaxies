@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour {
     public GameObject UiTutorialButton;
     public GameObject UiVirtualController;
     public GameObject UiMenuQuitButton;
+    public GameObject UiPauseResumeButton;
     public GameObject UiPauseQuitButton;
     public GameObject UiGameoverQuitButton;
     public GameObject UiExtraLife;
@@ -81,6 +82,7 @@ public class GameManager : MonoBehaviour {
         UiTutorialButton.SetActive(false);
         UiVirtualController.SetActive(true);
         UiMenuQuitButton.SetActive(true);
+        UiPauseResumeButton.SetActive(true);
         UiPauseQuitButton.SetActive(true);
         UiGameoverQuitButton.SetActive(true);
 #endif
@@ -189,9 +191,11 @@ public class GameManager : MonoBehaviour {
         // Update highscore
         List<NameScoreData> data = new List<NameScoreData>();
         StartCoroutine(Database.GetHighscoreData(data));
-        
+
         // Pass to highscore to wait for coroutine finishing
-        StartCoroutine(UiHighscoreFromMenu.GetComponent<Highscore>().UpdateScores(data));
+        Highscore highscore = UiHighscoreFromGameover.GetComponent<Highscore>();
+        if (highscore && highscore.isActiveAndEnabled)
+            highscore.StartCoroutine(highscore.UpdateScores(data));
     }
 
     public void showHighscoreFromGameover()
@@ -208,7 +212,9 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(Database.GetHighscoreData(data));
 
         // Pass to highscore to wait for coroutine finishing
-        StartCoroutine(UiHighscoreFromGameover.GetComponent<Highscore>().UpdateScores(data));
+        Highscore highscore = UiHighscoreFromGameover.GetComponent<Highscore>();
+        if(highscore && highscore.isActiveAndEnabled)
+            highscore.StartCoroutine(highscore.UpdateScores(data));
     }
 
     public void showSubmitHighscore()
@@ -469,7 +475,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private void TogglePause()
+    public void TogglePause()
     {
         Time.timeScale = Time.timeScale > 0 ? 0.0f : 1.0f;
 
