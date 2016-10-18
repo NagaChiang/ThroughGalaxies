@@ -193,7 +193,7 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(Database.GetHighscoreData(data));
 
         // Pass to highscore to wait for coroutine finishing
-        Highscore highscore = UiHighscoreFromGameover.GetComponent<Highscore>();
+        Highscore highscore = UiHighscoreFromMenu.GetComponent<Highscore>();
         if (highscore && highscore.isActiveAndEnabled)
             highscore.StartCoroutine(highscore.UpdateScores(data));
     }

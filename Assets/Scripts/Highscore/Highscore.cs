@@ -14,7 +14,7 @@ public class Highscore : MonoBehaviour {
         // Wait for data downloading
         while (scoreData.Count == 0)
             yield return null;
-        
+
         // Update
         for(int i = 0; i < scoreData.Count; i++)
         {
