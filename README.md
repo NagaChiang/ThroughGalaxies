@@ -1,12 +1,7 @@
 # Through Galaxies
 A hardcore shoot'em up featuring weapon switching/upgrading and tough bosses.
 
-![Imgur](http://i.imgur.com/rW3BNJz.gif)
-![Imgur](http://i.imgur.com/dxAOjBU.gif)
-![Imgur](http://i.imgur.com/MPI4VvK.gif)
-![Imgur](http://i.imgur.com/TWVo3Jj.gif)
-![Imgur](http://i.imgur.com/rnScFTr.gif)
-![Imgur](http://i.imgur.com/pQJVJRW.gif)
+![Imgur](http://i.imgur.com/SPeIU42.gif)
 
 ## Features
 - Maneuver 3 powerful weapons to overwhelm your enemies
