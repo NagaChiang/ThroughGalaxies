@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour {
 
@@ -17,7 +18,25 @@ public class AudioManager : MonoBehaviour {
     public AudioClip Clip_ButtonClick;
     public AudioClip Clip_GalaxyIntro;
 
-	public void PlayBgm(AudioClip clip)
+    [Header("UI")]
+    public Slider SliderMusic;
+    public Slider SliderSfx;
+
+    void Start()
+    {
+        // Initialize values of UI
+        SliderMusic.value = BgmVolume;
+        SliderSfx.value = SfxVolume;
+    }
+
+    public void OnSliderValueChanged()
+    {
+        BgmVolume = SliderMusic.value;
+        BgmSource.volume = BgmVolume;
+        SfxVolume = SliderSfx.value;
+    }
+
+    public void PlayBgm(AudioClip clip)
     {
         BgmSource.clip = clip;
         BgmSource.loop = true;
@@ -46,7 +65,7 @@ public class AudioManager : MonoBehaviour {
             if (index >= 0 && index < SfxSources.Length)
             {
                 AudioSource source = SfxSources[index];
-                source.PlayOneShot(clip, SfxOneShotVolume);
+                source.PlayOneShot(clip, SfxOneShotVolume * SfxVolume);
             }
         }
 

@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour {
     public BackgroundScroller BgScroller;
     public GameObject UiMenu;
     public GameObject UiHowToPlay;
+    public GameObject UiOption;
     public GameObject UiHud;
     public GameObject UiGameover;
     public GameObject UiHighscoreFromMenu;
@@ -168,6 +169,7 @@ public class GameManager : MonoBehaviour {
         UiGameover.SetActive(false);
         UiHighscoreFromMenu.SetActive(false);
         _enabledEnterRestart = true;
+        UiOption.SetActive(false);
     }
     public void showHowToPlay()
     {
@@ -177,6 +179,12 @@ public class GameManager : MonoBehaviour {
         // enable how to play
         UiMenu.SetActive(false);
         UiHowToPlay.SetActive(true);
+    }
+
+    public void showOptions()
+    {
+        UiMenu.SetActive(false);
+        UiOption.SetActive(true);
     }
 
     public void showHighscoreFromMainmenu()
