@@ -2,6 +2,9 @@
 using System.Collections;
 using CnControls;
 using UnityEngine.Advertisements;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 [System.Serializable]
 public struct Limit
@@ -196,13 +199,40 @@ public class PlayerController : Damageable {
         Rigidbody rigidbody = GetComponent<Rigidbody>();
 
         // Get input
-        float axisHorizontal;
-        float axisVertical;
+        float axisHorizontal = 0.0f;
+        float axisVertical = 0.0f;
         if (GameMgr.IsMobile)
         {
             // For mobiles
-            axisHorizontal = CnInputManager.GetAxis("Horizontal");
-            axisVertical = CnInputManager.GetAxis("Vertical");
+            if (Input.touchCount > 0)
+            {
+                // Raycast to UI to check if it hits button
+                Touch touch = Input.GetTouch(0);
+                PointerEventData pointerData = new PointerEventData(EventSystem.current);
+                pointerData.position = touch.position;
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerData, results);
+
+                bool hasHitButton = false;
+                for (int i = 0; i < results.Count; i++)
+                {
+                    RaycastResult result = results[i];
+                    if (result.gameObject.GetComponent<SimpleButton>() != null)
+                    {
+                        // Hit button
+                        hasHitButton = true;
+                        break;
+                    }
+                }
+
+                // Hasn't hit button
+                if (!hasHitButton)
+                {
+                    Vector3 posWorld = Camera.main.ScreenToWorldPoint(touch.position);
+                    axisHorizontal = posWorld.x - transform.position.x;
+                    axisVertical = posWorld.z - transform.position.z;
+                }
+            }
         }
         else
         {
