@@ -208,20 +208,22 @@ public class PlayerController : Damageable {
             {
                 // Raycast to UI to check if it hits button
                 Touch touch = Input.GetTouch(0);
-                PointerEventData pointerData = new PointerEventData(EventSystem.current);
-                pointerData.position = touch.position;
-                List<RaycastResult> results = new List<RaycastResult>();
-                EventSystem.current.RaycastAll(pointerData, results);
-
                 bool hasHitButton = false;
-                for (int i = 0; i < results.Count; i++)
+                if (touch.phase == TouchPhase.Began)
                 {
-                    RaycastResult result = results[i];
-                    if (result.gameObject.GetComponent<SimpleButton>() != null)
+                    PointerEventData pointerData = new PointerEventData(EventSystem.current);
+                    pointerData.position = touch.position;
+                    List<RaycastResult> results = new List<RaycastResult>();
+                    EventSystem.current.RaycastAll(pointerData, results);
+                    for (int i = 0; i < results.Count; i++)
                     {
-                        // Hit button
-                        hasHitButton = true;
-                        break;
+                        RaycastResult result = results[i];
+                        if (result.gameObject.GetComponent<SimpleButton>() != null)
+                        {
+                            // Hit button
+                            hasHitButton = true;
+                            break;
+                        }
                     }
                 }
 

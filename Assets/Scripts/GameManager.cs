@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour {
         }
 
         // Submit highscore
-        if(UiInputName.enabled
+        if(UiInputName.IsActive()
             && UiInputName.text != ""
             && Input.GetButtonDown("Submit"))
         {
@@ -125,39 +125,42 @@ public class GameManager : MonoBehaviour {
 
     public void restart()
     {
-        // disable enter
-        _enabledEnterRestart = false;
+        if (_player == null)
+        {
+            // disable enter
+            _enabledEnterRestart = false;
 
-        // Enable pause
-        EnabledPause = true;
+            // Enable pause
+            EnabledPause = true;
 
-        // clear previous remains
-        clearRemainingGameObjects();
+            // clear previous remains
+            clearRemainingGameObjects();
 
-        // disable other UI and enable HUD
-        UiMenu.SetActive(false);
-        UiHud.SetActive(true);
-        UiGameover.SetActive(false);
-        UiBossStatus.SetActive(false);
+            // disable other UI and enable HUD
+            UiMenu.SetActive(false);
+            UiHud.SetActive(true);
+            UiGameover.SetActive(false);
+            UiBossStatus.SetActive(false);
 
-        // stop last wave spawning
-        if (RoutineWaveSpawn != null)
-            StopCoroutine(RoutineWaveSpawn);
+            // stop last wave spawning
+            if (RoutineWaveSpawn != null)
+                StopCoroutine(RoutineWaveSpawn);
 
-        // initial properties
-        IsGameover = false;
-        _score = 0;
-        _difficultyFactor = 1.0f;
-        _stage = 1;
+            // initial properties
+            IsGameover = false;
+            _score = 0;
+            _difficultyFactor = 1.0f;
+            _stage = 1;
 
-        // update score UI
-        updateScoreUI(_score);
+            // update score UI
+            updateScoreUI(_score);
 
-        // spawn player
-        _player = Instantiate(player);
+            // spawn player
+            _player = Instantiate(player);
 
-        // spawn waves
-        RoutineWaveSpawn = StartCoroutine(spawnWaves());
+            // spawn waves
+            RoutineWaveSpawn = StartCoroutine(spawnWaves());
+        }
     }
 
     public void showMainMenu()
@@ -274,7 +277,7 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(Database.SubmitPlayerData(data, value => id = value));
         while (id == Database.BUSY_STATE)
             yield return null;
-
+        
         // Check if it's a highscore
         if (id >= 0)
         {
