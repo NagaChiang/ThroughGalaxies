@@ -28,7 +28,7 @@ public class RandomSpawnWave : Wave
     private IEnumerator spawnSet(RandomSpawnSet set, float difficulty)
     {
         // Set Difficulty
-        if (!isBoss)
+        if (!isBoss && set.objects[0].GetComponent<Asteroid>() == null)
         {
             set.number = (int)(set.number * difficulty);
             set.interval = set.interval / difficulty;

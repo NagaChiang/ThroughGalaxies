@@ -482,7 +482,8 @@ public class GameManager : MonoBehaviour {
             }
 
             // Raise the difficulty
-            _difficultyFactor += 1.0f;
+            if(_difficultyFactor < 2.0f)
+                _difficultyFactor += 0.25f;
         }
     }
 
