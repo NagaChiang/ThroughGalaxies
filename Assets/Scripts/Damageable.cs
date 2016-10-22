@@ -69,21 +69,25 @@ public abstract class Damageable : SfxBase {
             return;
         }
 
-        // reduce health
-        health -= damage;
-
-        // dead
-        if (health <= 0)
+        // Avoid applying multiple lethal damage at the same time
+        if (health > 0)
         {
-            health = 0;
+            // reduce health
+            health -= damage;
 
-            // destroy this gameObject
-            destroy();
-            return;
+            // dead
+            if (health <= 0)
+            {
+                health = 0;
+
+                // destroy this gameObject
+                destroy();
+                return;
+            }
+
+            // blinking effect
+            StartCoroutine(blinkOnHit());
         }
-
-        // blinking effect
-        StartCoroutine(blinkOnHit());
     }
 
     // healing

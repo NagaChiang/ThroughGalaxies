@@ -56,7 +56,7 @@ public class PlayerController : Damageable {
     protected override void Start()
     {
         //weapons.Bolt.level = 5;
-        //weapons.Sphere.level = 5;
+        weapons.Sphere.level = 5;
         //weapons.Laser.level = 5;
 
         // Get GameManager
