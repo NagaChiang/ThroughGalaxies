@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour {
     public GameObject UiPauseQuitButton;
     public GameObject UiGameoverQuitButton;
     public GameObject UiExtraLife;
+    public UiScoreResizer UiScoreResizer;
 
     [Header("Misc")]
     public CameraShaker Camera;
@@ -356,6 +357,9 @@ public class GameManager : MonoBehaviour {
 
             // update score UI
             updateScoreUI(_score);
+
+            // Enlarge score text
+            UiScoreResizer.ChangeScale();
         }
     }
 

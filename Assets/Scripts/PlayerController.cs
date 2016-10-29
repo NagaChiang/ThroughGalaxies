@@ -49,9 +49,10 @@ public class PlayerController : Damageable {
     private HealthBar healthCircle;
     private WeaponBar weaponCircle;
     private PlayerWeapon _currentWeapon;
+    private Vector3 ControlOffset; // the offset from ship position to control point
     private int _remainingLife;
     private bool _isImmune;
-    public bool HasAd; // Unity Ads
+    public bool HasAd { get; private set; } // Unity Ads
 
     protected override void Start()
     {
@@ -209,21 +210,19 @@ public class PlayerController : Damageable {
                 // Raycast to UI to check if it hits button
                 Touch touch = Input.GetTouch(0);
                 bool hasHitButton = false;
-                if (touch.phase == TouchPhase.Began)
+
+                PointerEventData pointerData = new PointerEventData(EventSystem.current);
+                pointerData.position = touch.position;
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerData, results);
+                for (int i = 0; i < results.Count; i++)
                 {
-                    PointerEventData pointerData = new PointerEventData(EventSystem.current);
-                    pointerData.position = touch.position;
-                    List<RaycastResult> results = new List<RaycastResult>();
-                    EventSystem.current.RaycastAll(pointerData, results);
-                    for (int i = 0; i < results.Count; i++)
+                    RaycastResult result = results[i];
+                    if (result.gameObject.GetComponent<SimpleButton>() != null)
                     {
-                        RaycastResult result = results[i];
-                        if (result.gameObject.GetComponent<SimpleButton>() != null)
-                        {
-                            // Hit button
-                            hasHitButton = true;
-                            break;
-                        }
+                        // Hit button
+                        hasHitButton = true;
+                        break;
                     }
                 }
 
@@ -231,8 +230,19 @@ public class PlayerController : Damageable {
                 if (!hasHitButton)
                 {
                     Vector3 posWorld = Camera.main.ScreenToWorldPoint(touch.position);
-                    axisHorizontal = posWorld.x - transform.position.x;
-                    axisVertical = posWorld.z - transform.position.z;
+                    posWorld.y = 0.0f;
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        // Update offset
+                        ControlOffset = posWorld - transform.position;
+                    }
+                    else
+                    {
+                        // Direction calculated by control point
+                        Vector3 controlPoint = transform.position + ControlOffset;
+                        axisHorizontal = posWorld.x - controlPoint.x;
+                        axisVertical = posWorld.z - controlPoint.z;
+                    }
                 }
             }
         }
