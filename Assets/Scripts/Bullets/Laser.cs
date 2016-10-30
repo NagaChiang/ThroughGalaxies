@@ -27,7 +27,7 @@ public class Laser : SfxBase
     private const int NOT_LOOPING_INDEX = -10;
     private bool HasFired;
 
-    private const float _RAY_LENGTH = 50.0f;
+    private const float _RAY_LENGTH = 30.0f;
     private float StartTime;
     private float NextDamageTime;
     private LineRenderer BulletPath;
@@ -160,6 +160,10 @@ public class Laser : SfxBase
 
     private void UpdateDamage(Vector3 boxCenter, float width, float totalLength)
     {
+        // Avoid exception
+        if (width <= 0 || totalLength <= 0)
+            return;
+
         // Damage
         if (Time.time >= NextDamageTime)
         {
