@@ -73,21 +73,18 @@ public class Laser : SfxBase
             }
 
             // Apply damage to targets
-            Vector3 boxCenter;
             float laserLength;
             if (hitInfo.collider && !isPiercing)
             {
                 // Hit something
-                boxCenter = (transform.position + hitInfo.point) / 2.0f;
                 laserLength = hitInfo.distance;
             }
             else
             {
                 // No hit, user max length instead
-                boxCenter = transform.position + (_RAY_LENGTH / 2.0f) * transform.forward;
                 laserLength = _RAY_LENGTH;
             }
-            UpdateDamage(boxCenter, Width, laserLength);
+            UpdateDamage(Width, laserLength);
         }
 
         // Not start firing
@@ -158,7 +155,7 @@ public class Laser : SfxBase
         return hitInfo;
     }
 
-    private void UpdateDamage(Vector3 boxCenter, float width, float totalLength)
+    private void UpdateDamage(float width, float totalLength)
     {
         // Avoid exception
         if (width <= 0 || totalLength <= 0)
@@ -169,9 +166,13 @@ public class Laser : SfxBase
         {
             bool hasHit = false;
             ArrayList damagedObjIDs = new ArrayList();
-            Collider[] colliders = Physics.OverlapBox(boxCenter, new Vector3(width / 2.0f, 0.0f, totalLength / 2.0f), transform.rotation);
-            foreach (Collider collider in colliders)
+            Vector3 boxCenter = transform.position;
+            Vector3 halfExtents = new Vector3(width / 2.0f, 0.0f, 0.0f);
+            RaycastHit[] hits = Physics.BoxCastAll(boxCenter, halfExtents, transform.forward, transform.rotation, totalLength);
+            for (int i = 0; i < hits.Length; i++)
             {
+                Collider collider = hits[i].collider;
+
                 // check null
                 if (collider == null)
                     continue;
