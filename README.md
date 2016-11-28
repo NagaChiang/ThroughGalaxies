@@ -16,6 +16,7 @@ A hardcore shoot'em up featuring weapon switching/upgrading and tough bosses.
 - [Follow me on Twitter](https://twitter.com/NagaChiang)
 
 ## Credits
+- [Space Shooter Tutorial by Unity](https://unity3d.com/learn/tutorials/projects/space-shooter-tutorial)
 - [Counter-Strike by SoJa](http://www.dafont.com/counter-strike.font)
 - [Free SciFi Fighter by CGPitbull](https://www.assetstore.unity3d.com/en/#!/content/11711)
 - [Space Droid by Adequate](https://www.assetstore.unity3d.com/en/#!/content/32200)
