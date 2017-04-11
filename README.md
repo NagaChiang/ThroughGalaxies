@@ -12,7 +12,7 @@ A hardcore shoot'em up featuring weapon switching/upgrading and tough bosses.
 ## Links
 - [Google Play (Android)](https://play.google.com/store/apps/details?id=com.Timespawn.ThroughGalaxies)
 - [itch.io (web browser)](https://nagachiang.itch.io/through-galaxies)
-- [Game Play Trailer (Youtube)](https://www.youtube.com/watch?v=X-sCpzsHnho)
+- [Gameplay Trailer (Youtube)](https://www.youtube.com/watch?v=X-sCpzsHnho)
 - [Follow me on Twitter](https://twitter.com/NagaChiang)
 
 ## Credits
